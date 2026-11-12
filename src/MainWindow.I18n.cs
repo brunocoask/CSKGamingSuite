@@ -60,7 +60,7 @@ public partial class MainWindow
         foreach (var p in new System.Windows.FrameworkElement[] {
             PageDash, PageSystem, PageSensors, PageGpu, PageGames, PageBottleneck,
             PageOverlay, PageBench, PageOptimize, PageOc, PageInteg, PageLauncher,
-            PageDriver, PageStartup, PageApps, PageMakerPorts, PageMakerDrv,
+            PageDriver, PageStartup, PageApps,
             PageDisks, PageEnergy, PageNet, PageStress, PageUltrawide })
         {
             if (p.Visibility == System.Windows.Visibility.Visible)
@@ -92,8 +92,6 @@ public partial class MainWindow
             "PageDriver" => LocalizationManager.GetString("Nav_Driver", "Drivers"),
             "PageInteg" => LocalizationManager.GetString("Nav_Integ", "Sincronização RGB"),
             "PageUltrawide" => LocalizationManager.GetString("Nav_Ultrawide", "Gerenciador Ultrawide 34\""),
-            "PageMakerPorts" => LocalizationManager.GetString("Nav_MakerPorts", "Portas COM"),
-            "PageMakerDrv" => LocalizationManager.GetString("Nav_MakerDrv", "Drivers Seriais"),
             _ => ""
         };
     }

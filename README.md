@@ -49,9 +49,6 @@ The application automatically identifies your Windows display culture upon first
 - **RGB Lighting & Hardware Sync:** Direct SDK synchronization across Corsair iCUE, OpenRGB, and Razer Chroma.
 - **34" Ultrawide Manager:** Intelligent window snapper designed for 21:9 monitors (50/50 split, 33/33/33 column, and 25/50/25 productivity layouts).
 
-### 🔌 Maker & Serial Tools (`CSK MAKER`)
-- **COM Port Cleaner:** Inspects, troubleshoots, and frees ghost/locked COM serial ports (CH340, CP210x, FTDI, Arduino).
-
 ---
 
 ## 🛠️ Architecture & Technologies

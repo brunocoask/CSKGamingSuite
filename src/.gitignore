@@ -2,7 +2,7 @@
 bin/
 obj/
 publish/
-ResetExplode-dist/
+CSK-dist/
 *.exe
 *.dll
 *.pdb
@@ -16,5 +16,5 @@ ResetExplode-dist/
 # Local
 *.log
 
-# Drivers seriais embutidos (RESET MAKER): as DLLs fazem parte dos pacotes assinados
+# Drivers embutidos: as DLLs fazem parte dos pacotes assinados
 !Drivers/**

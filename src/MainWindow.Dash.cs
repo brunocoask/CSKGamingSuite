@@ -397,15 +397,6 @@ public partial class MainWindow
                                       LocalizationManager.Get("O Game Bar não grava o tempo todo."),
                                       LocalizationManager.Get("O Game DVR está gravando: custa FPS.")));
 
-        try
-        {
-            var (reserved, inUse) = UsbCleaner.ComStatus();
-            int stuck = reserved.Except(inUse).Count();
-            list.Add(Item(stuck == 0, "Portas COM livres", "Nenhum número COM preso.",
-                          $"{stuck} números presos por dispositivos antigos."));
-        }
-        catch { }
-
         _health = list;
         DashHealth.ItemsSource = _health;
     }
