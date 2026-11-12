@@ -73,10 +73,10 @@ The application automatically identifies your Windows display culture upon first
 ### Clone & Compile
 ```bash
 # Clone the repository
-git clone https://github.com/YOUR_USERNAME/CSKGamingSuite.git
+git clone https://github.com/brunocoask/CSKGamingSuite.git
 
 # Enter the source directory
-cd CSKGamingSuite/ResetExplode-main
+cd CSKGamingSuite/src
 
 # Build in Release mode
 dotnet build CSKGamingSuite.csproj -c Release -o ../CSK_App_Build

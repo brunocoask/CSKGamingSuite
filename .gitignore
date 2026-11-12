@@ -1,4 +1,4 @@
-# Build outputs and binaries
+﻿# Build outputs and binaries
 bin/
 obj/
 *.user
@@ -14,11 +14,11 @@ CSK_App_Build_v2/
 CSK_App_Build_v3/
 *.zip
 *.exe
-!ResetExplode-main/Assets/**/*.ico
+!src/Assets/**/*.ico
 
 # Temporary scratch & signature scripts/images
 *.png
-!ResetExplode-main/Assets/**/*.png
+!src/Assets/**/*.png
 *.pdf
 *.bat
 *.iss
