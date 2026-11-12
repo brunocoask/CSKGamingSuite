@@ -242,6 +242,36 @@
         </Setter>
     </Style>
 
+    <!-- ===== Item do Rail Compacto (ícone em cima + legenda curta embaixo) ===== -->
+    <Style x:Key="RailItem" TargetType="RadioButton">
+        <Setter Property="Foreground" Value="{DynamicResource Muted}"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="GroupName" Value="RailNav"/>
+        <Setter Property="Margin" Value="6,2"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RadioButton">
+                    <Border x:Name="bg" Background="Transparent" Width="56" Height="50"
+                            CornerRadius="{DynamicResource NavRadius}" BorderThickness="1.5" BorderBrush="Transparent"
+                            Padding="2,5">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="bg" Property="Background" Value="{DynamicResource Hover}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource Fg}"/>
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="bg" Property="Background" Value="{DynamicResource Card}"/>
+                            <Setter TargetName="bg" Property="BorderBrush" Value="{DynamicResource Accent}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource Accent}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <!-- Número grande de cartão (como os valores em destaque da referência) -->
     <Style x:Key="Hero" TargetType="TextBlock">
         <Setter Property="FontSize" Value="34"/>

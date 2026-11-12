@@ -86,6 +86,7 @@ public partial class MainWindow : Window
         InitSkinSelector();
         UpdateThemeButton();
         InitLanguageSelector();
+        ApplySidebarMode(_settings.SidebarExpanded);
         ShowPage("PageDash");
 
         // Sensores: a lista começa vazia e é preenchida quando a detecção do hardware termina (LoadHardwareAsync).
@@ -266,9 +267,13 @@ public partial class MainWindow : Window
             && FindName(items[..^5]) is System.Windows.Controls.Primitives.ToggleButton group)
         {
             group.IsChecked = true;
-            name = $"{group.Content} · {name}";
+            string groupName = group.Content is Panel gp
+                ? gp.Children.OfType<TextBlock>().LastOrDefault()?.Text ?? ""
+                : group.Content?.ToString() ?? "";
+            name = $"{groupName} · {name}";
         }
         TitlePage.Text = name;
+        SyncRailSelection(page);
 
         // Algumas páginas carregam dados só quando abertas.
         switch (page)
@@ -293,6 +298,80 @@ public partial class MainWindow : Window
             p.Visibility = p.Name == name ? Visibility.Visible : Visibility.Collapsed;
         UpdateCurrentPageTitle();
         LocalizationManager.TranslateTree(this);
+    }
+
+    private bool _syncingNav;
+
+    private void ApplySidebarMode(bool expanded)
+    {
+        SideCol.Width = new GridLength(expanded ? 256 : 86);
+        NavScroll.Visibility = expanded ? Visibility.Visible : Visibility.Collapsed;
+        NavRailScroll.Visibility = expanded ? Visibility.Collapsed : Visibility.Visible;
+        SideTeleFull.Visibility = expanded ? Visibility.Visible : Visibility.Collapsed;
+        SideTeleCompact.Visibility = expanded ? Visibility.Collapsed : Visibility.Visible;
+        SideVersion.Visibility = expanded ? Visibility.Visible : Visibility.Collapsed;
+        BtnToggleSidebar.Content = expanded ? "\uE76B" : "\uE76C";
+        BtnToggleSidebar.HorizontalAlignment = expanded ? HorizontalAlignment.Right : HorizontalAlignment.Center;
+        BtnToggleSidebar.ToolTip = expanded ? "Recolher menu" : "Expandir menu";
+    }
+
+    private void BtnToggleSidebar_Click(object sender, RoutedEventArgs e)
+    {
+        _settings.SidebarExpanded = !_settings.SidebarExpanded;
+        try { _settings.Save(); } catch { }
+        ApplySidebarMode(_settings.SidebarExpanded);
+    }
+
+    private void Rail_Checked(object sender, RoutedEventArgs e)
+    {
+        if (_syncingNav || PageSystem == null) return;
+        if (sender is not RadioButton rb || rb.Tag is not string page) return;
+        _syncingNav = true;
+        try
+        {
+            var nav = FindNavByTag(page);
+            if (nav != null) nav.IsChecked = true;
+        }
+        finally
+        {
+            _syncingNav = false;
+        }
+    }
+
+    private void SyncRailSelection(string page)
+    {
+        if (_syncingNav || NavRailPanel == null) return;
+        _syncingNav = true;
+        try
+        {
+            foreach (var rb in NavRailPanel.Children.OfType<RadioButton>())
+            {
+                if (rb.Tag as string == page)
+                {
+                    rb.IsChecked = true;
+                    break;
+                }
+            }
+        }
+        finally
+        {
+            _syncingNav = false;
+        }
+    }
+
+    private RadioButton? FindNavByTag(string page)
+    {
+        foreach (var child in new FrameworkElement[]
+        {
+            NavDash, NavSystem, NavSensors, NavGpu, NavDisks, NavEnergy, NavNet,
+            NavLauncher, NavGames, NavBottleneck, NavOverlay,
+            NavBench, NavStress, NavOc,
+            NavOptimize, NavStartup, NavApps, NavDriver, NavInteg, NavUltrawide
+        })
+        {
+            if (child is RadioButton rb && rb.Tag as string == page) return rb;
+        }
+        return null;
     }
 
     // ---------------- Sistema ----------------

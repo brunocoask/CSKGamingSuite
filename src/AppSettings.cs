@@ -70,6 +70,7 @@ public sealed class AppSettings
     // Aparência
     public bool LightTheme { get; set; }
     public string Skin { get; set; } = "clean-glass";
+    public bool SidebarExpanded { get; set; }
 
     // Overlay
     public string OverlayCorner { get; set; } = "TL";

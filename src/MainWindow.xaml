@@ -192,10 +192,10 @@
                     <DropShadowEffect Color="#000000" BlurRadius="14" ShadowDepth="2" Opacity="0.04"/>
                 </Border.Effect>
                 <DockPanel>
-                    <!-- Rodapé: aviso de sensores + leitura ao vivo compacta -->
-                    <StackPanel DockPanel.Dock="Bottom" Margin="16,6,16,16">
+                    <!-- Rodapé: aviso de sensores + leitura ao vivo compacta + botão expandir/recolher -->
+                    <StackPanel DockPanel.Dock="Bottom" Margin="8,6,8,10">
                         <Border x:Name="CpuSensorWarn" Visibility="Collapsed" BorderBrush="{DynamicResource Fg}" BorderThickness="1"
-                                CornerRadius="12" Padding="12,10" Margin="0,0,0,12">
+                                CornerRadius="12" Padding="12,10" Margin="8,0,8,12">
                             <StackPanel>
                                 <TextBlock Text="Sem temperatura e consumo da CPU" FontWeight="SemiBold" FontSize="12" TextWrapping="Wrap"/>
                                 <TextBlock x:Name="CpuSensorWarnText" Foreground="{DynamicResource Muted}" FontSize="11" TextWrapping="Wrap" Margin="0,3,0,8"/>
@@ -203,7 +203,7 @@
                                         Click="BtnFixCpuSensors_Click"/>
                             </StackPanel>
                         </Border>
-                        <Border Background="{DynamicResource Card}" BorderBrush="{DynamicResource Line}" BorderThickness="1" CornerRadius="{DynamicResource CardRadius}" Padding="14,10">
+                        <Border x:Name="SideTeleFull" Margin="8,0,8,0" Background="{DynamicResource Card}" BorderBrush="{DynamicResource Line}" BorderThickness="1" CornerRadius="{DynamicResource CardRadius}" Padding="14,10">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="46"/>
@@ -225,8 +225,117 @@
                                 <TextBlock x:Name="SideStress" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Text="parado" FontFamily="{StaticResource Mono}" FontSize="12" Margin="0,3"/>
                             </Grid>
                         </Border>
-                        <TextBlock x:Name="SideVersion" Text="v0.16" Foreground="{DynamicResource Faint}" FontSize="11" Margin="4,10,0,0"/>
+                        <Border x:Name="SideTeleCompact" Visibility="Collapsed" Margin="2,0,2,0" Background="{DynamicResource Card}" BorderBrush="{DynamicResource Line}" BorderThickness="1" CornerRadius="{DynamicResource NavRadius}" Padding="4,6">
+                            <StackPanel HorizontalAlignment="Center">
+                                <TextBlock Text="CPU" Foreground="{DynamicResource Faint}" FontSize="9" FontWeight="Bold" HorizontalAlignment="Center"/>
+                                <TextBlock Text="{Binding Text, ElementName=SideTemp}" FontFamily="{StaticResource Mono}" FontSize="10.5" HorizontalAlignment="Center" Margin="0,0,0,4"/>
+                                <TextBlock Text="GPU" Foreground="{DynamicResource Faint}" FontSize="9" FontWeight="Bold" HorizontalAlignment="Center"/>
+                                <TextBlock Text="{Binding Text, ElementName=SideGpuTemp}" FontFamily="{StaticResource Mono}" FontSize="10.5" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+                        <Grid Margin="8,8,8,0">
+                            <TextBlock x:Name="SideVersion" Text="v0.16" Foreground="{DynamicResource Faint}" FontSize="11" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                            <Button x:Name="BtnToggleSidebar" Style="{StaticResource CaptionButton}" Width="34" Height="28"
+                                    HorizontalAlignment="Right" Content="&#xE76B;" Click="BtnToggleSidebar_Click"
+                                    ToolTip="Recolher / Expandir menu"/>
+                        </Grid>
                     </StackPanel>
+
+                    <!-- Rail Compacto (ícones + mini legenda, estilo dock expansível) -->
+                    <ScrollViewer x:Name="NavRailScroll" Visibility="Collapsed" VerticalScrollBarVisibility="Hidden" Margin="0,6,0,0">
+                        <StackPanel x:Name="NavRailPanel" HorizontalAlignment="Center" Margin="0,0,0,8">
+                            <RadioButton Style="{StaticResource RailItem}" Tag="PageDash" Checked="Rail_Checked" IsChecked="True" ToolTip="{DynamicResource Nav_Overview}">
+                                <StackPanel HorizontalAlignment="Center">
+                                    <TextBlock Text="&#xE80F;" FontFamily="{StaticResource Icons}" FontSize="17" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="Início" FontSize="9.5" HorizontalAlignment="Center" Margin="0,3,0,0"/>
+                                </StackPanel>
+                            </RadioButton>
+                            <RadioButton Style="{StaticResource RailItem}" Tag="PageSystem" Checked="Rail_Checked" ToolTip="{DynamicResource Nav_System}">
+                                <StackPanel HorizontalAlignment="Center">
+                                    <TextBlock Text="&#xE7F8;" FontFamily="{StaticResource Icons}" FontSize="17" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="Sistema" FontSize="9.5" HorizontalAlignment="Center" Margin="0,3,0,0"/>
+                                </StackPanel>
+                            </RadioButton>
+                            <RadioButton Style="{StaticResource RailItem}" Tag="PageSensors" Checked="Rail_Checked" ToolTip="{DynamicResource Nav_Sensors}">
+                                <StackPanel HorizontalAlignment="Center">
+                                    <TextBlock Text="&#xE9D9;" FontFamily="{StaticResource Icons}" FontSize="17" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="Sensores" FontSize="9.5" HorizontalAlignment="Center" Margin="0,3,0,0"/>
+                                </StackPanel>
+                            </RadioButton>
+                            <RadioButton Style="{StaticResource RailItem}" Tag="PageGpu" Checked="Rail_Checked" ToolTip="{DynamicResource Nav_Gpu}">
+                                <StackPanel HorizontalAlignment="Center">
+                                    <TextBlock Text="&#xE7F4;" FontFamily="{StaticResource Icons}" FontSize="17" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="GPU" FontSize="9.5" HorizontalAlignment="Center" Margin="0,3,0,0"/>
+                                </StackPanel>
+                            </RadioButton>
+                            <RadioButton Style="{StaticResource RailItem}" Tag="PageDisks" Checked="Rail_Checked" ToolTip="{DynamicResource Nav_Disks}">
+                                <StackPanel HorizontalAlignment="Center">
+                                    <TextBlock Text="&#xEDA2;" FontFamily="{StaticResource Icons}" FontSize="17" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="Discos" FontSize="9.5" HorizontalAlignment="Center" Margin="0,3,0,0"/>
+                                </StackPanel>
+                            </RadioButton>
+                            <RadioButton Style="{StaticResource RailItem}" Tag="PageNet" Checked="Rail_Checked" ToolTip="{DynamicResource Nav_Net}">
+                                <StackPanel HorizontalAlignment="Center">
+                                    <TextBlock Text="&#xE839;" FontFamily="{StaticResource Icons}" FontSize="17" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="Rede" FontSize="9.5" HorizontalAlignment="Center" Margin="0,3,0,0"/>
+                                </StackPanel>
+                            </RadioButton>
+                            <RadioButton Style="{StaticResource RailItem}" Tag="PageLauncher" Checked="Rail_Checked" ToolTip="{DynamicResource Nav_Launcher}">
+                                <StackPanel HorizontalAlignment="Center">
+                                    <TextBlock Text="&#xE8F1;" FontFamily="{StaticResource Icons}" FontSize="17" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="Jogos" FontSize="9.5" HorizontalAlignment="Center" Margin="0,3,0,0"/>
+                                </StackPanel>
+                            </RadioButton>
+                            <RadioButton Style="{StaticResource RailItem}" Tag="PageGames" Checked="Rail_Checked" ToolTip="{DynamicResource Nav_Games}">
+                                <StackPanel HorizontalAlignment="Center">
+                                    <TextBlock Text="&#xEC49;" FontFamily="{StaticResource Icons}" FontSize="17" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="FPS" FontSize="9.5" HorizontalAlignment="Center" Margin="0,3,0,0"/>
+                                </StackPanel>
+                            </RadioButton>
+                            <RadioButton Style="{StaticResource RailItem}" Tag="PageBench" Checked="Rail_Checked" ToolTip="{DynamicResource Nav_Bench}">
+                                <StackPanel HorizontalAlignment="Center">
+                                    <TextBlock Text="&#xE8B9;" FontFamily="{StaticResource Icons}" FontSize="17" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="Bench" FontSize="9.5" HorizontalAlignment="Center" Margin="0,3,0,0"/>
+                                </StackPanel>
+                            </RadioButton>
+                            <RadioButton Style="{StaticResource RailItem}" Tag="PageStress" Checked="Rail_Checked" ToolTip="{DynamicResource Nav_Stress}">
+                                <StackPanel HorizontalAlignment="Center">
+                                    <TextBlock Text="&#xE945;" FontFamily="{StaticResource Icons}" FontSize="17" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="Estresse" FontSize="9.5" HorizontalAlignment="Center" Margin="0,3,0,0"/>
+                                </StackPanel>
+                            </RadioButton>
+                            <RadioButton Style="{StaticResource RailItem}" Tag="PageOc" Checked="Rail_Checked" ToolTip="{DynamicResource Nav_Oc}">
+                                <StackPanel HorizontalAlignment="Center">
+                                    <TextBlock Text="&#xEC4A;" FontFamily="{StaticResource Icons}" FontSize="17" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="Overclock" FontSize="9.5" HorizontalAlignment="Center" Margin="0,3,0,0"/>
+                                </StackPanel>
+                            </RadioButton>
+                            <RadioButton Style="{StaticResource RailItem}" Tag="PageOptimize" Checked="Rail_Checked" ToolTip="{DynamicResource Nav_Optimize}">
+                                <StackPanel HorizontalAlignment="Center">
+                                    <TextBlock Text="&#xE9F3;" FontFamily="{StaticResource Icons}" FontSize="17" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="Otimizar" FontSize="9.5" HorizontalAlignment="Center" Margin="0,3,0,0"/>
+                                </StackPanel>
+                            </RadioButton>
+                            <RadioButton Style="{StaticResource RailItem}" Tag="PageDriver" Checked="Rail_Checked" ToolTip="{DynamicResource Nav_Driver}">
+                                <StackPanel HorizontalAlignment="Center">
+                                    <TextBlock Text="&#xE896;" FontFamily="{StaticResource Icons}" FontSize="17" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="Drivers" FontSize="9.5" HorizontalAlignment="Center" Margin="0,3,0,0"/>
+                                </StackPanel>
+                            </RadioButton>
+                            <RadioButton Style="{StaticResource RailItem}" Tag="PageInteg" Checked="Rail_Checked" ToolTip="{DynamicResource Nav_Integ}">
+                                <StackPanel HorizontalAlignment="Center">
+                                    <TextBlock Text="&#xE790;" FontFamily="{StaticResource Icons}" FontSize="17" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="RGB" FontSize="9.5" HorizontalAlignment="Center" Margin="0,3,0,0"/>
+                                </StackPanel>
+                            </RadioButton>
+                            <RadioButton Style="{StaticResource RailItem}" Tag="PageUltrawide" Checked="Rail_Checked" ToolTip="{DynamicResource Nav_Ultrawide}">
+                                <StackPanel HorizontalAlignment="Center">
+                                    <TextBlock Text="&#xE7F7;" FontFamily="{StaticResource Icons}" FontSize="17" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="Monitor" FontSize="9.5" HorizontalAlignment="Center" Margin="0,3,0,0"/>
+                                </StackPanel>
+                            </RadioButton>
+                        </StackPanel>
+                    </ScrollViewer>
 
                     <!-- Navegação por categorias -->
                     <ScrollViewer x:Name="NavScroll" VerticalScrollBarVisibility="Auto" Margin="0,2,0,0">
@@ -237,7 +346,12 @@
                                     <TextBlock Text="{DynamicResource Nav_Overview}" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </RadioButton>
-                            <ToggleButton x:Name="GrpExplode" Style="{StaticResource NavGroup}" Content="{DynamicResource Nav_Group_Hardware}"/>
+                            <ToggleButton x:Name="GrpExplode" Style="{StaticResource NavGroup}">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="&#xE950;" FontFamily="{StaticResource Icons}" FontSize="13" Width="24" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{DynamicResource Nav_Group_Hardware}" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </ToggleButton>
                             <StackPanel x:Name="GrpExplodeItems" Margin="10,0,0,4" Visibility="{Binding IsChecked, ElementName=GrpExplode, Converter={StaticResource BoolVis}}">
                             <RadioButton x:Name="NavSystem" Style="{StaticResource NavItem}" Tag="PageSystem" Checked="Nav_Checked">
                                 <StackPanel Orientation="Horizontal">
@@ -276,7 +390,12 @@
                                 </StackPanel>
                             </RadioButton>
                             </StackPanel>
-                            <ToggleButton x:Name="GrpGames" Style="{StaticResource NavGroup}" Content="{DynamicResource Nav_Group_Games}"/>
+                            <ToggleButton x:Name="GrpGames" Style="{StaticResource NavGroup}">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="&#xE7FC;" FontFamily="{StaticResource Icons}" FontSize="13" Width="24" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{DynamicResource Nav_Group_Games}" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </ToggleButton>
                             <StackPanel x:Name="GrpGamesItems" Margin="10,0,0,4" Visibility="{Binding IsChecked, ElementName=GrpGames, Converter={StaticResource BoolVis}}">
                             <RadioButton x:Name="NavLauncher" Style="{StaticResource NavItem}" Tag="PageLauncher" Checked="Nav_Checked">
                                 <StackPanel Orientation="Horizontal">
@@ -303,7 +422,12 @@
                                 </StackPanel>
                             </RadioButton>
                             </StackPanel>
-                            <ToggleButton x:Name="GrpPerf" Style="{StaticResource NavGroup}" Content="{DynamicResource Nav_Group_Perf}"/>
+                            <ToggleButton x:Name="GrpPerf" Style="{StaticResource NavGroup}">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="&#xE9D2;" FontFamily="{StaticResource Icons}" FontSize="13" Width="24" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{DynamicResource Nav_Group_Perf}" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </ToggleButton>
                             <StackPanel x:Name="GrpPerfItems" Margin="10,0,0,4" Visibility="{Binding IsChecked, ElementName=GrpPerf, Converter={StaticResource BoolVis}}">
                             <RadioButton x:Name="NavBench" Style="{StaticResource NavItem}" Tag="PageBench" Checked="Nav_Checked">
                                 <StackPanel Orientation="Horizontal">
@@ -324,7 +448,12 @@
                                 </StackPanel>
                             </RadioButton>
                             </StackPanel>
-                            <ToggleButton x:Name="GrpTools" Style="{StaticResource NavGroup}" Content="{DynamicResource Nav_Group_Tools}"/>
+                            <ToggleButton x:Name="GrpTools" Style="{StaticResource NavGroup}">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="&#xE90F;" FontFamily="{StaticResource Icons}" FontSize="13" Width="24" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{DynamicResource Nav_Group_Tools}" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </ToggleButton>
                             <StackPanel x:Name="GrpToolsItems" Margin="10,0,0,4" Visibility="{Binding IsChecked, ElementName=GrpTools, Converter={StaticResource BoolVis}}">
                             <RadioButton x:Name="NavOptimize" Style="{StaticResource NavItem}" Tag="PageOptimize" Checked="Nav_Checked">
                                 <StackPanel Orientation="Horizontal">
@@ -358,6 +487,7 @@
                             </RadioButton>
                             <RadioButton x:Name="NavUltrawide" Style="{StaticResource NavItem}" Tag="PageUltrawide" Checked="Nav_Checked">
                                 <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="&#xE7F7;" FontFamily="{StaticResource Icons}" FontSize="14" Width="28" VerticalAlignment="Center"/>
                                     <TextBlock Text="{DynamicResource Nav_Ultrawide}" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </RadioButton>
