@@ -95,7 +95,7 @@ public partial class MainWindow
                 Text = $"ZONA {i + 1}",
                 FontWeight = FontWeights.Bold,
                 FontSize = 13,
-                Foreground = isSelected ? new SolidColorBrush(System.Windows.Media.Color.FromRgb(0, 113, 227)) : (Brush)FindResource("Fg"),
+                Foreground = (Brush)FindResource(isSelected ? "Accent" : "Fg"),
                 HorizontalAlignment = HorizontalAlignment.Center
             });
 

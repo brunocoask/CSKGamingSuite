@@ -74,7 +74,36 @@ public partial class MainWindow
         }
     }
 
-    // ================= Tema (escuro / claro) =================
+    // ================= Skins & Tema (escuro / claro) =================
+
+    private bool _skinInitializing;
+
+    private void InitSkinSelector()
+    {
+        _skinInitializing = true;
+        try
+        {
+            CmbSkin.ItemsSource = ThemeManager.Skins;
+            CmbSkin.SelectedItem = ThemeManager.CurrentSkin;
+        }
+        finally
+        {
+            _skinInitializing = false;
+        }
+    }
+
+    private void CmbSkin_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+    {
+        if (_skinInitializing) return;
+        if (CmbSkin.SelectedItem is SkinDefinition skin)
+        {
+            ThemeManager.Apply(skin.Id, _settings.LightTheme);
+            _settings.Skin = skin.Id;
+            try { _settings.Save(); } catch { }
+            UpdateThemeButton();
+            if (PageDash.IsVisible) UpdateDashboard();
+        }
+    }
 
     private void Theme_Click(object sender, RoutedEventArgs e)
     {
@@ -82,14 +111,22 @@ public partial class MainWindow
         _settings.LightTheme = ThemeManager.IsLight;
         try { _settings.Save(); } catch { }
         UpdateThemeButton();
+        if (PageDash.IsVisible) UpdateDashboard();
     }
 
-    /// <summary>Mostra o ícone do modo para onde o clique leva (sol = ir para o claro, lua = ir para o escuro) e troca o logo.</summary>
+    /// <summary>Atualiza o botão claro/escuro, os botões de janela da skin ativa e o logo.</summary>
     private void UpdateThemeButton()
     {
+        var skin = ThemeManager.CurrentSkin;
         bool light = ThemeManager.IsLight;
+
+        BtnTheme.Visibility = skin.SupportsLightDark ? Visibility.Visible : Visibility.Collapsed;
         BtnTheme.Content = light ? "\uE708" : "\uE706";
         BtnTheme.ToolTip = light ? "Modo escuro" : "Modo claro";
+
+        WindowTrafficLights.Visibility = skin.UseTrafficLights ? Visibility.Visible : Visibility.Collapsed;
+        WindowClassicButtons.Visibility = skin.UseTrafficLights ? Visibility.Collapsed : Visibility.Visible;
+
         TitleLogo.Source = new System.Windows.Media.Imaging.BitmapImage(
             new Uri(light ? "pack://application:,,,/Assets/logo-dark.png" : "pack://application:,,,/Assets/logo.png"));
     }

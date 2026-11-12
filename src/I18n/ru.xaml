@@ -11,6 +11,7 @@
     <sys:String x:Key="App_ThemeToggle">Светлая / Темная тема</sys:String>
     <sys:String x:Key="App_MasterVolume">Общая громкость системы</sys:String>
     <sys:String x:Key="App_Language">Язык</sys:String>
+    <sys:String x:Key="App_Skin">Стиль (Скин)</sys:String>
 
     <!-- Sidebar Группы -->
     <sys:String x:Key="Nav_Group_Hardware">CSK ЖЕЛЕЗО</sys:String>

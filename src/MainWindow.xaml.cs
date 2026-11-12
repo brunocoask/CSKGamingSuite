@@ -82,7 +82,8 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-        ThemeManager.Apply(_settings.LightTheme);
+        ThemeManager.Apply(_settings.Skin, _settings.LightTheme);
+        InitSkinSelector();
         UpdateThemeButton();
         InitLanguageSelector();
         ShowPage("PageDash");

@@ -11,6 +11,7 @@
     <sys:String x:Key="App_ThemeToggle">Toggle Light / Dark Mode</sys:String>
     <sys:String x:Key="App_MasterVolume">System Master Volume</sys:String>
     <sys:String x:Key="App_Language">Language</sys:String>
+    <sys:String x:Key="App_Skin">Visual Skin</sys:String>
 
     <!-- Sidebar Groups -->
     <sys:String x:Key="Nav_Group_Hardware">CSK HARDWARE</sys:String>

@@ -11,6 +11,7 @@
     <sys:String x:Key="App_ThemeToggle">切换 浅色 / 深色 模式</sys:String>
     <sys:String x:Key="App_MasterVolume">系统主音量</sys:String>
     <sys:String x:Key="App_Language">语言</sys:String>
+    <sys:String x:Key="App_Skin">外观主题 (皮肤)</sys:String>
 
     <!-- Sidebar 分组 -->
     <sys:String x:Key="Nav_Group_Hardware">CSK 硬件</sys:String>

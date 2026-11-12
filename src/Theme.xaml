@@ -13,12 +13,19 @@
     <SolidColorBrush x:Key="Faint" Color="#AEAEB2"/>
     <SolidColorBrush x:Key="Ink" Color="#FFFFFF"/>
     <SolidColorBrush x:Key="Accent" Color="#0071E3"/>
+    <SolidColorBrush x:Key="AccentInk" Color="#FFFFFF"/>
     <SolidColorBrush x:Key="AccentSecondary" Color="#5E5CE6"/>
     <SolidColorBrush x:Key="Gold" Color="#0071E3"/>
     <SolidColorBrush x:Key="GoldSoft" Color="#47A3FF"/>
     <SolidColorBrush x:Key="ThumbBrush" Color="#D1D1D6"/>
     <SolidColorBrush x:Key="ThumbHover" Color="#AEAEB2"/>
     <SolidColorBrush x:Key="ThumbDrag" Color="#8E8E93"/>
+
+    <CornerRadius x:Key="CardRadius">14</CornerRadius>
+    <CornerRadius x:Key="ButtonRadius">10</CornerRadius>
+    <CornerRadius x:Key="SidebarRadius">16</CornerRadius>
+    <CornerRadius x:Key="NavRadius">12</CornerRadius>
+    <CornerRadius x:Key="ChipRadius">14</CornerRadius>
 
     <FontFamily x:Key="Mono">Cascadia Mono, Consolas</FontFamily>
     <FontFamily x:Key="Icons">Segoe Fluent Icons, Segoe MDL2 Assets</FontFamily>
@@ -51,12 +58,12 @@
         <Setter Property="Foreground" Value="{DynamicResource Fg}"/>
     </Style>
 
-    <!-- ===== Cartão macOS Squircle Glass ===== -->
+    <!-- ===== Cartão ===== -->
     <Style x:Key="CardBorder" TargetType="Border">
         <Setter Property="Background" Value="{DynamicResource Card}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource Line}"/>
         <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="CornerRadius" Value="14"/>
+        <Setter Property="CornerRadius" Value="{DynamicResource CardRadius}"/>
         <Setter Property="Padding" Value="16"/>
         <Setter Property="Effect">
             <Setter.Value>
@@ -65,10 +72,10 @@
         </Setter>
     </Style>
 
-    <!-- ===== Botões Estilo Apple macOS ===== -->
+    <!-- ===== Botões ===== -->
     <Style x:Key="PrimaryButton" TargetType="Button">
         <Setter Property="Background" Value="{DynamicResource Accent}"/>
-        <Setter Property="Foreground" Value="#FFFFFF"/>
+        <Setter Property="Foreground" Value="{DynamicResource AccentInk}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource Accent}"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="FontWeight" Value="SemiBold"/>
@@ -78,7 +85,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <Border x:Name="b" Background="{TemplateBinding Background}" CornerRadius="10" Padding="{TemplateBinding Padding}">
+                    <Border x:Name="b" Background="{TemplateBinding Background}" CornerRadius="{DynamicResource ButtonRadius}" Padding="{TemplateBinding Padding}">
                         <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </Border>
                     <ControlTemplate.Triggers>
@@ -161,7 +168,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="RadioButton">
-                    <Border x:Name="bg" Background="Transparent" Height="40" CornerRadius="12" BorderThickness="1" BorderBrush="Transparent">
+                    <Border x:Name="bg" Background="Transparent" Height="40" CornerRadius="{DynamicResource NavRadius}" BorderThickness="1" BorderBrush="Transparent">
                         <Grid Margin="12,0,10,0">
                             <!-- Indicador Dourado Real no item ativo -->
                             <Rectangle x:Name="goldBar" Width="4" Height="20" Fill="{DynamicResource Gold}"
@@ -209,7 +216,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ToggleButton">
-                    <Border x:Name="bg" Background="Transparent" Height="36" CornerRadius="12">
+                    <Border x:Name="bg" Background="Transparent" Height="36" CornerRadius="{DynamicResource NavRadius}">
                         <DockPanel Margin="14,0,12,0">
                             <TextBlock x:Name="chev" DockPanel.Dock="Right" Text="&#xE70D;" FontFamily="{StaticResource Icons}" FontSize="10"
                                        VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
@@ -278,7 +285,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="RadioButton">
-                    <Border x:Name="b" BorderBrush="{DynamicResource LineStrong}" BorderThickness="1" CornerRadius="14"
+                    <Border x:Name="b" BorderBrush="{DynamicResource LineStrong}" BorderThickness="1" CornerRadius="{DynamicResource ChipRadius}"
                             Padding="13,5" Background="Transparent">
                         <ContentPresenter VerticalAlignment="Center"/>
                     </Border>
@@ -350,7 +357,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="TextBox">
                     <Border x:Name="b" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="10">
+                            BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="{DynamicResource ButtonRadius}">
                         <Grid>
                             <TextBlock x:Name="ph" Text="{TemplateBinding Tag}" Foreground="{DynamicResource Faint}"
                                        Margin="{TemplateBinding Padding}" Padding="2,0,0,0" Visibility="Collapsed"
@@ -388,7 +395,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="PasswordBox">
                     <Border x:Name="b" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="10">
+                            BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="{DynamicResource ButtonRadius}">
                         <ScrollViewer x:Name="PART_ContentHost" Margin="{TemplateBinding Padding}" VerticalAlignment="Center"/>
                     </Border>
                     <ControlTemplate.Triggers>

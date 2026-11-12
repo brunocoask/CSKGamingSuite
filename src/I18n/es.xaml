@@ -11,6 +11,7 @@
     <sys:String x:Key="App_ThemeToggle">Cambiar Modo Claro / Oscuro</sys:String>
     <sys:String x:Key="App_MasterVolume">Volumen Principal del Sistema</sys:String>
     <sys:String x:Key="App_Language">Idioma</sys:String>
+    <sys:String x:Key="App_Skin">Estilo Visual (Skin)</sys:String>
 
     <!-- Sidebar Grupos -->
     <sys:String x:Key="Nav_Group_Hardware">CSK HARDWARE</sys:String>
