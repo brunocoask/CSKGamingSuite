@@ -5,7 +5,7 @@
         xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
         Title="CSK Gaming Suite" Icon="Assets/app.ico" Width="1380" Height="820" MinWidth="1120" MinHeight="640"
         WindowStartupLocation="CenterScreen" WindowStyle="None" ResizeMode="CanResize"
-        Background="{DynamicResource Bg}" Foreground="{DynamicResource Fg}"
+        Background="{DynamicResource WindowBgBrush}" Foreground="{DynamicResource Fg}"
         FontFamily="Segoe UI Variable Text, Segoe UI" FontSize="13"
         UseLayoutRounding="True" TextOptions.TextFormattingMode="Display">
 
@@ -149,7 +149,10 @@
                        RenderOptions.BitmapScalingMode="HighQuality"/>
                 <TextBlock Text="CSK" FontWeight="SemiBold" FontSize="14" Foreground="{DynamicResource Fg}" VerticalAlignment="Center"/>
                 <TextBlock Text="{DynamicResource App_Subtitle}" FontWeight="Normal" FontSize="13" Foreground="{DynamicResource Muted}" Margin="6,0,0,0" VerticalAlignment="Center"/>
-                <TextBlock x:Name="TitlePage" Foreground="{DynamicResource Faint}" FontSize="12" Margin="16,0,0,0" VerticalAlignment="Center"/>
+                <Border x:Name="SkinBadge" Visibility="Collapsed" Background="{DynamicResource Accent}" CornerRadius="{DynamicResource ButtonRadius}" Padding="7,2" Margin="12,0,0,0" VerticalAlignment="Center">
+                    <TextBlock x:Name="SkinBadgeText" Text="HUD" FontFamily="{StaticResource Mono}" FontSize="9.5" FontWeight="Bold" Foreground="{DynamicResource AccentInk}"/>
+                </Border>
+                <TextBlock x:Name="TitlePage" Foreground="{DynamicResource Faint}" FontSize="12" Margin="14,0,0,0" VerticalAlignment="Center"/>
             </StackPanel>
             <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right"
                         WindowChrome.IsHitTestVisibleInChrome="True" Margin="0,0,16,0">
@@ -503,6 +506,67 @@
                 <!-- ===== VISÃO GERAL (painel) ===== -->
                 <ScrollViewer x:Name="PageDash" VerticalScrollBarVisibility="Auto">
                     <StackPanel Margin="18,4,20,10">
+
+                        <!-- Deck de Mostradores estilo painel de hardware (ativo nas skins HUD / Gamer / Overclock) -->
+                        <Grid x:Name="DashAfterburnerDeck" Visibility="Collapsed" Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="10"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="10"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="10"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Gauge 1: CPU Temp -->
+                            <Border Grid.Column="0" Style="{StaticResource CardBorder}" Padding="12,10">
+                                <Grid>
+                                    <Canvas x:Name="GaugeCpuTempCanvas" Width="116" Height="106" HorizontalAlignment="Center"/>
+                                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,10,0,0">
+                                        <TextBlock Text="CPU TEMP" FontSize="9.5" FontWeight="Bold" Foreground="{DynamicResource Muted}" HorizontalAlignment="Center"/>
+                                        <TextBlock x:Name="GaugeCpuTempVal" Text="—" FontFamily="{StaticResource Mono}" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource Fg}" HorizontalAlignment="Center"/>
+                                        <TextBlock x:Name="GaugeCpuTempSub" Text="°C" FontFamily="{StaticResource Mono}" FontSize="10" Foreground="{DynamicResource Faint}" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+
+                            <!-- Gauge 2: CPU Load -->
+                            <Border Grid.Column="2" Style="{StaticResource CardBorder}" Padding="12,10">
+                                <Grid>
+                                    <Canvas x:Name="GaugeCpuLoadCanvas" Width="116" Height="106" HorizontalAlignment="Center"/>
+                                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,10,0,0">
+                                        <TextBlock Text="CPU LOAD" FontSize="9.5" FontWeight="Bold" Foreground="{DynamicResource Muted}" HorizontalAlignment="Center"/>
+                                        <TextBlock x:Name="GaugeCpuLoadVal" Text="—" FontFamily="{StaticResource Mono}" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource Fg}" HorizontalAlignment="Center"/>
+                                        <TextBlock x:Name="GaugeCpuLoadSub" Text="uso / clock" FontFamily="{StaticResource Mono}" FontSize="10" Foreground="{DynamicResource Faint}" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+
+                            <!-- Gauge 3: GPU Temp -->
+                            <Border Grid.Column="4" Style="{StaticResource CardBorder}" Padding="12,10">
+                                <Grid>
+                                    <Canvas x:Name="GaugeGpuTempCanvas" Width="116" Height="106" HorizontalAlignment="Center"/>
+                                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,10,0,0">
+                                        <TextBlock Text="GPU TEMP" FontSize="9.5" FontWeight="Bold" Foreground="{DynamicResource Muted}" HorizontalAlignment="Center"/>
+                                        <TextBlock x:Name="GaugeGpuTempVal" Text="—" FontFamily="{StaticResource Mono}" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource Fg}" HorizontalAlignment="Center"/>
+                                        <TextBlock x:Name="GaugeGpuTempSub" Text="°C" FontFamily="{StaticResource Mono}" FontSize="10" Foreground="{DynamicResource Faint}" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+
+                            <!-- Gauge 4: GPU Load -->
+                            <Border Grid.Column="6" Style="{StaticResource CardBorder}" Padding="12,10">
+                                <Grid>
+                                    <Canvas x:Name="GaugeGpuLoadCanvas" Width="116" Height="106" HorizontalAlignment="Center"/>
+                                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,10,0,0">
+                                        <TextBlock Text="GPU LOAD" FontSize="9.5" FontWeight="Bold" Foreground="{DynamicResource Muted}" HorizontalAlignment="Center"/>
+                                        <TextBlock x:Name="GaugeGpuLoadVal" Text="—" FontFamily="{StaticResource Mono}" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource Fg}" HorizontalAlignment="Center"/>
+                                        <TextBlock x:Name="GaugeGpuLoadSub" Text="uso / MHz" FontFamily="{StaticResource Mono}" FontSize="10" Foreground="{DynamicResource Faint}" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </Grid>
 
                         <!-- Linha 1: gráfico grande + desempenho -->
                         <Grid Margin="0,0,0,10">

@@ -105,6 +105,7 @@ public partial class MainWindow
     private void UpdateDashboard(bool full = true)
     {
         DrawDashChart();
+        UpdateAfterburnerGauges();
         UpdateDashComponents();
         UpdateDashRings();
         if (full)
@@ -113,6 +114,85 @@ public partial class MainWindow
             ShowEvents();
         }
         if (full || (DateTime.Now - _healthAt).TotalSeconds > 60) UpdateDashHealth();
+    }
+
+    private void UpdateAfterburnerGauges()
+    {
+        if (DashAfterburnerDeck == null || DashAfterburnerDeck.Visibility != Visibility.Visible) return;
+        var accent = (Brush)FindResource("Accent");
+        var accent2 = (Brush)FindResource("AccentSecondary");
+
+        float? cpuT = _monitor.CpuTemperature;
+        float? cpuL = _monitor.CpuLoad;
+        float? cpuW = _monitor.CpuPower;
+        float? gpuT = MainGpuTemp();
+        float? gpuL = MainGpuLoad();
+        uint? gpuClk = (_gpus.Count > 0 && _gpus[0].NvmlHandle != IntPtr.Zero) ? Nvml.Clock(_gpus[0].NvmlHandle, Nvml.ClockGraphics) : null;
+
+        GaugeCpuTempVal.Text = cpuT is float ct ? $"{ct:0}°" : "—";
+        GaugeCpuTempSub.Text = cpuW is float cw ? $"{cw:0} W" : "°C";
+        DrawArcGauge(GaugeCpuTempCanvas, cpuT is float ct2 ? Math.Clamp((ct2 - 20) / 80.0, 0, 1) : 0, accent);
+
+        GaugeCpuLoadVal.Text = cpuL is float cl ? $"{cl:0}%" : "—";
+        GaugeCpuLoadSub.Text = CpuClockAvg() is float cc ? $"{cc:0} MHz" : "uso";
+        DrawArcGauge(GaugeCpuLoadCanvas, cpuL is float cl2 ? Math.Clamp(cl2 / 100.0, 0, 1) : 0, accent2);
+
+        GaugeGpuTempVal.Text = gpuT is float gt ? $"{gt:0}°" : "—";
+        GaugeGpuTempSub.Text = MainGpuPower() is float gw ? $"{gw:0} W" : "°C";
+        DrawArcGauge(GaugeGpuTempCanvas, gpuT is float gt2 ? Math.Clamp((gt2 - 20) / 80.0, 0, 1) : 0, accent);
+
+        GaugeGpuLoadVal.Text = gpuL is float gl ? $"{gl:0}%" : "—";
+        GaugeGpuLoadSub.Text = gpuClk is uint gc ? $"{gc} MHz" : "uso";
+        DrawArcGauge(GaugeGpuLoadCanvas, gpuL is float gl2 ? Math.Clamp(gl2 / 100.0, 0, 1) : 0, accent2);
+    }
+
+    private void DrawArcGauge(Canvas canvas, double fraction, Brush activeBrush)
+    {
+        canvas.Children.Clear();
+        double cx = canvas.Width / 2, cy = canvas.Height / 2 + 4, r = 46;
+        const double startDeg = 140; // esquerda inferior
+        const double sweepMax = 260; // até direita inferior
+
+        var trackBrush = (Brush)FindResource("Line");
+        var tickBrush = (Brush)FindResource("Faint");
+
+        // Marcações de escala estilo tacômetro
+        for (int i = 0; i <= 10; i++)
+        {
+            double ang = (startDeg + (sweepMax * i / 10.0)) * Math.PI / 180.0;
+            double r1 = r - 7, r2 = r - 3;
+            canvas.Children.Add(new Line
+            {
+                X1 = cx + r1 * Math.Cos(ang), Y1 = cy + r1 * Math.Sin(ang),
+                X2 = cx + r2 * Math.Cos(ang), Y2 = cy + r2 * Math.Sin(ang),
+                Stroke = tickBrush, StrokeThickness = i % 5 == 0 ? 1.5 : 0.8
+            });
+        }
+
+        // Arco de fundo
+        canvas.Children.Add(BuildArcPath(cx, cy, r, startDeg, sweepMax, trackBrush, 7));
+
+        // Arco ativo
+        if (fraction > 0.01)
+            canvas.Children.Add(BuildArcPath(cx, cy, r, startDeg, sweepMax * fraction, activeBrush, 7));
+    }
+
+    private static Path BuildArcPath(double cx, double cy, double r, double startDeg, double sweepDeg, Brush stroke, double thickness)
+    {
+        double a1 = startDeg * Math.PI / 180.0;
+        double a2 = (startDeg + sweepDeg) * Math.PI / 180.0;
+        var p1 = new Point(cx + r * Math.Cos(a1), cy + r * Math.Sin(a1));
+        var p2 = new Point(cx + r * Math.Cos(a2), cy + r * Math.Sin(a2));
+        var seg = new ArcSegment(p2, new Size(r, r), 0, sweepDeg > 180, SweepDirection.Clockwise, true);
+        var fig = new PathFigure(p1, new[] { seg }, false);
+        return new Path
+        {
+            Stroke = stroke,
+            StrokeThickness = thickness,
+            StrokeStartLineCap = PenLineCap.Round,
+            StrokeEndLineCap = PenLineCap.Round,
+            Data = new PathGeometry(new[] { fig })
+        };
     }
 
     private static string F(float? v, string fmt, string unit) => v is float x ? x.ToString(fmt) + unit : "—";

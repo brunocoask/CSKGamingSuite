@@ -26,6 +26,8 @@
     <CornerRadius x:Key="SidebarRadius">16</CornerRadius>
     <CornerRadius x:Key="NavRadius">12</CornerRadius>
     <CornerRadius x:Key="ChipRadius">14</CornerRadius>
+    <SolidColorBrush x:Key="WindowBgBrush" Color="#F2F3F7"/>
+    <SolidColorBrush x:Key="CardBorderBrush" Color="#E1E4EA"/>
 
     <FontFamily x:Key="Mono">Cascadia Mono, Consolas</FontFamily>
     <FontFamily x:Key="Icons">Segoe Fluent Icons, Segoe MDL2 Assets</FontFamily>
@@ -61,7 +63,7 @@
     <!-- ===== Cartão ===== -->
     <Style x:Key="CardBorder" TargetType="Border">
         <Setter Property="Background" Value="{DynamicResource Card}"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource Line}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource CardBorderBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="CornerRadius" Value="{DynamicResource CardRadius}"/>
         <Setter Property="Padding" Value="16"/>

@@ -127,6 +127,15 @@ public partial class MainWindow
         WindowTrafficLights.Visibility = skin.UseTrafficLights ? Visibility.Visible : Visibility.Collapsed;
         WindowClassicButtons.Visibility = skin.UseTrafficLights ? Visibility.Collapsed : Visibility.Visible;
 
+        Sidebar.Margin = skin.DockedSidebar ? new Thickness(0) : new Thickness(14, 0, 0, 14);
+        Sidebar.BorderThickness = skin.DockedSidebar ? new Thickness(0, 0, 1, 0) : new Thickness(1);
+
+        bool hasBadge = !string.IsNullOrEmpty(skin.BadgeText);
+        SkinBadge.Visibility = hasBadge ? Visibility.Visible : Visibility.Collapsed;
+        SkinBadgeText.Text = skin.BadgeText;
+
+        DashAfterburnerDeck.Visibility = skin.ShowAfterburnerDeck ? Visibility.Visible : Visibility.Collapsed;
+
         TitleLogo.Source = new System.Windows.Media.Imaging.BitmapImage(
             new Uri(light ? "pack://application:,,,/Assets/logo-dark.png" : "pack://application:,,,/Assets/logo.png"));
     }

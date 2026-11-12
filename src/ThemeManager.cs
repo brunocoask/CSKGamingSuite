@@ -29,6 +29,10 @@ public sealed record SkinDefinition(
     string Description,
     bool SupportsLightDark,
     bool UseTrafficLights,
+    bool DockedSidebar,
+    bool ShowAfterburnerDeck,
+    string TextureType,
+    string BadgeText,
     double CardRadius,
     double ButtonRadius,
     double SidebarRadius,
@@ -41,8 +45,8 @@ public sealed record SkinDefinition(
 
 /// <summary>
 /// Motor de skins e temas do CSK Gaming Suite.
-/// Substitui pincéis e geometrias (CornerRadius) no ResourceDictionary da aplicação via DynamicResource,
-/// permitindo troca instantânea sem recarregar janelas. Overlay e aviso de dispositivo ficam sempre escuros.
+/// Aplica paletas de cores, texturas de fundo (grade técnica, fibra de carbono, scanlines, gradientes),
+/// geometrias (CornerRadius) e layout de mostradores estilo painel de hardware em tempo real.
 /// </summary>
 public static class ThemeManager
 {
@@ -54,9 +58,13 @@ public static class ThemeManager
         new(
             Id: "clean-glass",
             Name: "Clean Glass",
-            Description: "Minimalista com cantos suaves e vidro limpo",
+            Description: "Minimalista com cantos suaves e painel flutuante",
             SupportsLightDark: true,
             UseTrafficLights: true,
+            DockedSidebar: false,
+            ShowAfterburnerDeck: false,
+            TextureType: "solid",
+            BadgeText: "",
             CardRadius: 14,
             ButtonRadius: 10,
             SidebarRadius: 16,
@@ -80,24 +88,28 @@ public static class ThemeManager
         new(
             Id: "fluent-slate",
             Name: "Fluent Slate",
-            Description: "Superfícies foscas modernas com cantos equilibrados",
+            Description: "Painel integrado fosco com barra lateral encostada na borda",
             SupportsLightDark: true,
             UseTrafficLights: false,
+            DockedSidebar: true,
+            ShowAfterburnerDeck: false,
+            TextureType: "gradient",
+            BadgeText: "FLUENT",
             CardRadius: 8,
             ButtonRadius: 6,
-            SidebarRadius: 10,
+            SidebarRadius: 0,
             NavRadius: 6,
             ChipRadius: 8,
             SwatchPrimary: "#0078D4",
             SwatchBg: "#202020",
             Dark: new(
-                Bg: "#1C1C1C", Panel: "#242424", Card: "#2B2B2B", Hover: "#363636",
-                Line: "#333333", LineStrong: "#454545", Fg: "#FFFFFF", Muted: "#ADADAD",
+                Bg: "#1B1C20", Panel: "#222429", Card: "#2A2C32", Hover: "#353840",
+                Line: "#343740", LineStrong: "#484C58", Fg: "#FFFFFF", Muted: "#ADADAD",
                 Faint: "#6E6E6E", Ink: "#1C1C1C", Accent: "#0078D4", AccentInk: "#FFFFFF",
                 AccentSecondary: "#60CDFF", Gold: "#60CDFF", GoldSoft: "#99EBFF",
                 ThumbBrush: "#3D3D3D", ThumbHover: "#525252", ThumbDrag: "#6E6E6E"),
             Light: new(
-                Bg: "#F3F3F3", Panel: "#FAFAFA", Card: "#FFFFFF", Hover: "#EAEAEA",
+                Bg: "#F3F4F6", Panel: "#FAFAFA", Card: "#FFFFFF", Hover: "#EAEAEA",
                 Line: "#E5E5E5", LineStrong: "#CCCCCC", Fg: "#202020", Muted: "#606060",
                 Faint: "#989898", Ink: "#FFFFFF", Accent: "#0067C0", AccentInk: "#FFFFFF",
                 AccentSecondary: "#0078D4", Gold: "#0067C0", GoldSoft: "#4CC2FF",
@@ -106,19 +118,23 @@ public static class ThemeManager
         new(
             Id: "tactical-hud",
             Name: "Tactical HUD",
-            Description: "Painel de telemetria industrial âmbar e grafite",
+            Description: "Cockpit de telemetria com grade técnica e mostradores âmbar",
             SupportsLightDark: false,
             UseTrafficLights: false,
+            DockedSidebar: true,
+            ShowAfterburnerDeck: true,
+            TextureType: "grid",
+            BadgeText: "TELEMETRY HUD",
             CardRadius: 3,
             ButtonRadius: 2,
-            SidebarRadius: 4,
+            SidebarRadius: 0,
             NavRadius: 3,
             ChipRadius: 3,
             SwatchPrimary: "#FF7A00",
             SwatchBg: "#0B0D10",
             Dark: new(
-                Bg: "#0B0D10", Panel: "#12151A", Card: "#171B22", Hover: "#202630",
-                Line: "#272D38", LineStrong: "#3A4352", Fg: "#E8EDF5", Muted: "#8C97A8",
+                Bg: "#0B0D10", Panel: "#12151A", Card: "#161A22", Hover: "#1F2631",
+                Line: "#272E3A", LineStrong: "#FF7A00", Fg: "#E8EDF5", Muted: "#8C97A8",
                 Faint: "#5A6475", Ink: "#0B0D10", Accent: "#FF7A00", AccentInk: "#0B0D10",
                 AccentSecondary: "#FFB347", Gold: "#FF7A00", GoldSoft: "#FFB347",
                 ThumbBrush: "#2C3340", ThumbHover: "#FF7A00", ThumbDrag: "#FFB347")
@@ -126,9 +142,13 @@ public static class ThemeManager
         new(
             Id: "night-grid",
             Name: "Night Grid",
-            Description: "Interface futurista de alto contraste amarelo e ciano",
+            Description: "Deck futurista com scanlines, cantos afiados e mostradores neon",
             SupportsLightDark: false,
             UseTrafficLights: false,
+            DockedSidebar: false,
+            ShowAfterburnerDeck: true,
+            TextureType: "scanlines",
+            BadgeText: "CYBER DECK",
             CardRadius: 2,
             ButtonRadius: 0,
             SidebarRadius: 2,
@@ -146,9 +166,13 @@ public static class ThemeManager
         new(
             Id: "venom-matrix",
             Name: "Venom Matrix",
-            Description: "Preto profundo com iluminação verde neon",
+            Description: "Textura fibra de carbono com mostradores e LEDs verde neon",
             SupportsLightDark: false,
             UseTrafficLights: false,
+            DockedSidebar: false,
+            ShowAfterburnerDeck: true,
+            TextureType: "carbon",
+            BadgeText: "STEALTH MATRIX",
             CardRadius: 6,
             ButtonRadius: 4,
             SidebarRadius: 8,
@@ -157,38 +181,46 @@ public static class ThemeManager
             SwatchPrimary: "#00E640",
             SwatchBg: "#0C0C0C",
             Dark: new(
-                Bg: "#0C0C0C", Panel: "#141414", Card: "#1A1A1A", Hover: "#232823",
-                Line: "#2A2E2A", LineStrong: "#3A443A", Fg: "#EDEDED", Muted: "#9AA39A",
-                Faint: "#5E665E", Ink: "#0C0C0C", Accent: "#00E640", AccentInk: "#0C0C0C",
-                AccentSecondary: "#00B332", Gold: "#00E640", GoldSoft: "#4DFF7A",
+                Bg: "#0B0C0B", Panel: "#131513", Card: "#191C19", Hover: "#222A22",
+                Line: "#283128", LineStrong: "#00E640", Fg: "#EDEDED", Muted: "#9AA39A",
+                Faint: "#5E665E", Ink: "#0B0C0B", Accent: "#00E640", AccentInk: "#0B0C0B",
+                AccentSecondary: "#4DFF7A", Gold: "#00E640", GoldSoft: "#4DFF7A",
                 ThumbBrush: "#2A2E2A", ThumbHover: "#00B332", ThumbDrag: "#00E640")
         ),
         new(
             Id: "crimson-overdrive",
             Name: "Crimson Overdrive",
-            Description: "Chassi obsidian esportivo com acentos carmesim",
+            Description: "Painel racing diagonal com tacômetros e acentos carmesim",
             SupportsLightDark: false,
             UseTrafficLights: false,
+            DockedSidebar: true,
+            ShowAfterburnerDeck: true,
+            TextureType: "diagonal",
+            BadgeText: "OVERDRIVE",
             CardRadius: 4,
             ButtonRadius: 2,
-            SidebarRadius: 4,
+            SidebarRadius: 0,
             NavRadius: 3,
             ChipRadius: 4,
             SwatchPrimary: "#FF1E38",
             SwatchBg: "#0F0F12",
             Dark: new(
-                Bg: "#0F0F12", Panel: "#17171C", Card: "#1E1E24", Hover: "#2B2226",
-                Line: "#2E2E36", LineStrong: "#4A2830", Fg: "#F2F2F5", Muted: "#9E9EA8",
-                Faint: "#62626E", Ink: "#0F0F12", Accent: "#FF1E38", AccentInk: "#FFFFFF",
-                AccentSecondary: "#CC0028", Gold: "#FF1E38", GoldSoft: "#FF5C70",
+                Bg: "#0E0E11", Panel: "#16161B", Card: "#1D1D24", Hover: "#2C1E23",
+                Line: "#2F2A32", LineStrong: "#FF1E38", Fg: "#F2F2F5", Muted: "#9E9EA8",
+                Faint: "#62626E", Ink: "#0E0E11", Accent: "#FF1E38", AccentInk: "#FFFFFF",
+                AccentSecondary: "#FF6B35", Gold: "#FF1E38", GoldSoft: "#FF5C70",
                 ThumbBrush: "#363640", ThumbHover: "#CC0028", ThumbDrag: "#FF1E38")
         ),
         new(
             Id: "ultraviolet-pulse",
             Name: "Ultraviolet Pulse",
-            Description: "Overclock escuro com ciano elétrico e violeta",
+            Description: "Estação de overclock com gradiente metálico e mostradores ciano",
             SupportsLightDark: false,
             UseTrafficLights: false,
+            DockedSidebar: false,
+            ShowAfterburnerDeck: true,
+            TextureType: "gradient",
+            BadgeText: "OC LAB",
             CardRadius: 10,
             ButtonRadius: 8,
             SidebarRadius: 12,
@@ -197,9 +229,9 @@ public static class ThemeManager
             SwatchPrimary: "#00E5FF",
             SwatchBg: "#111116",
             Dark: new(
-                Bg: "#111116", Panel: "#191922", Card: "#20202B", Hover: "#2B2B3A",
-                Line: "#2E2E3E", LineStrong: "#464060", Fg: "#F5F5FF", Muted: "#9A9AB5",
-                Faint: "#636380", Ink: "#111116", Accent: "#00E5FF", AccentInk: "#111116",
+                Bg: "#101018", Panel: "#181824", Card: "#1F1F2E", Hover: "#2A2A40",
+                Line: "#2F2E46", LineStrong: "#9B51E0", Fg: "#F5F5FF", Muted: "#9A9AB5",
+                Faint: "#636380", Ink: "#101018", Accent: "#00E5FF", AccentInk: "#101018",
                 AccentSecondary: "#9B51E0", Gold: "#9B51E0", GoldSoft: "#00E5FF",
                 ThumbBrush: "#333346", ThumbHover: "#9B51E0", ThumbDrag: "#00E5FF")
         ),
@@ -249,6 +281,120 @@ public static class ThemeManager
         res["SidebarRadius"] = new CornerRadius(skin.SidebarRadius);
         res["NavRadius"] = new CornerRadius(skin.NavRadius);
         res["ChipRadius"] = new CornerRadius(skin.ChipRadius);
+
+        // Textura de fundo estrutural da janela (muda o padrão visual real da skin)
+        res["WindowBgBrush"] = BuildBackgroundBrush(skin, palette);
+        res["CardBorderBrush"] = BuildCardBorderBrush(skin, palette);
+        res["CardTopAccent"] = skin.ShowAfterburnerDeck
+            ? new Thickness(0, 2, 0, 0)
+            : new Thickness(0);
+    }
+
+    private static Brush BuildBackgroundBrush(SkinDefinition skin, SkinPalette p)
+    {
+        var baseColor = (Color)ColorConverter.ConvertFromString(p.Bg);
+        var accentColor = (Color)ColorConverter.ConvertFromString(p.Accent);
+        var secColor = (Color)ColorConverter.ConvertFromString(p.AccentSecondary);
+
+        switch (skin.TextureType)
+        {
+            case "gradient":
+            {
+                var c2 = IsLight
+                    ? Color.FromRgb((byte)Math.Max(0, baseColor.R - 10), (byte)Math.Max(0, baseColor.G - 8), (byte)Math.Max(0, baseColor.B - 4))
+                    : Color.FromRgb((byte)Math.Min(255, baseColor.R + 12), (byte)Math.Min(255, baseColor.G + 8), (byte)Math.Min(255, baseColor.B + 26));
+                var b = new LinearGradientBrush(baseColor, c2, new Point(0, 0), new Point(1, 1));
+                b.Freeze();
+                return b;
+            }
+            case "grid":
+            {
+                var lineCol = Color.FromArgb(0x16, accentColor.R, accentColor.G, accentColor.B);
+                var group = new DrawingGroup();
+                group.Children.Add(new GeometryDrawing(new SolidColorBrush(baseColor), null, new RectangleGeometry(new Rect(0, 0, 28, 28))));
+                var pen = new Pen(new SolidColorBrush(lineCol), 1);
+                group.Children.Add(new GeometryDrawing(null, pen, new LineGeometry(new Point(0, 0), new Point(28, 0))));
+                group.Children.Add(new GeometryDrawing(null, pen, new LineGeometry(new Point(0, 0), new Point(0, 28))));
+                var db = new DrawingBrush(group)
+                {
+                    TileMode = TileMode.Tile,
+                    Viewport = new Rect(0, 0, 28, 28),
+                    ViewportUnits = BrushMappingMode.Absolute
+                };
+                db.Freeze();
+                return db;
+            }
+            case "scanlines":
+            {
+                var scanCol = Color.FromArgb(0x14, secColor.R, secColor.G, secColor.B);
+                var group = new DrawingGroup();
+                group.Children.Add(new GeometryDrawing(new SolidColorBrush(baseColor), null, new RectangleGeometry(new Rect(0, 0, 8, 4))));
+                group.Children.Add(new GeometryDrawing(new SolidColorBrush(scanCol), null, new RectangleGeometry(new Rect(0, 0, 8, 1))));
+                var db = new DrawingBrush(group)
+                {
+                    TileMode = TileMode.Tile,
+                    Viewport = new Rect(0, 0, 8, 4),
+                    ViewportUnits = BrushMappingMode.Absolute
+                };
+                db.Freeze();
+                return db;
+            }
+            case "carbon":
+            {
+                var c1 = Color.FromRgb((byte)(baseColor.R + 7), (byte)(baseColor.G + 9), (byte)(baseColor.B + 7));
+                var c2 = Color.FromRgb((byte)(baseColor.R + 2), (byte)(baseColor.G + 3), (byte)(baseColor.B + 2));
+                var group = new DrawingGroup();
+                group.Children.Add(new GeometryDrawing(new SolidColorBrush(baseColor), null, new RectangleGeometry(new Rect(0, 0, 12, 12))));
+                group.Children.Add(new GeometryDrawing(new SolidColorBrush(c1), null, new RectangleGeometry(new Rect(0, 0, 6, 6))));
+                group.Children.Add(new GeometryDrawing(new SolidColorBrush(c2), null, new RectangleGeometry(new Rect(6, 6, 6, 6))));
+                var db = new DrawingBrush(group)
+                {
+                    TileMode = TileMode.Tile,
+                    Viewport = new Rect(0, 0, 10, 10),
+                    ViewportUnits = BrushMappingMode.Absolute
+                };
+                db.Freeze();
+                return db;
+            }
+            case "diagonal":
+            {
+                var stripe = Color.FromArgb(0x12, accentColor.R, accentColor.G, accentColor.B);
+                var group = new DrawingGroup();
+                group.Children.Add(new GeometryDrawing(new SolidColorBrush(baseColor), null, new RectangleGeometry(new Rect(0, 0, 16, 16))));
+                var pen = new Pen(new SolidColorBrush(stripe), 1.5);
+                group.Children.Add(new GeometryDrawing(null, pen, new LineGeometry(new Point(0, 16), new Point(16, 0))));
+                var db = new DrawingBrush(group)
+                {
+                    TileMode = TileMode.Tile,
+                    Viewport = new Rect(0, 0, 16, 16),
+                    ViewportUnits = BrushMappingMode.Absolute
+                };
+                db.Freeze();
+                return db;
+            }
+            default:
+            {
+                var sb = new SolidColorBrush(baseColor);
+                sb.Freeze();
+                return sb;
+            }
+        }
+    }
+
+    private static Brush BuildCardBorderBrush(SkinDefinition skin, SkinPalette p)
+    {
+        if (skin.ShowAfterburnerDeck)
+        {
+            var line = (Color)ColorConverter.ConvertFromString(p.Line);
+            var accent = (Color)ColorConverter.ConvertFromString(p.Accent);
+            var topGlow = Color.FromArgb(0x66, accent.R, accent.G, accent.B);
+            var b = new LinearGradientBrush(topGlow, line, new Point(0, 0), new Point(0, 1));
+            b.Freeze();
+            return b;
+        }
+        var sb = new SolidColorBrush((Color)ColorConverter.ConvertFromString(p.Line));
+        sb.Freeze();
+        return sb;
     }
 
     private static void SetBrush(ResourceDictionary res, object key, string hex)
