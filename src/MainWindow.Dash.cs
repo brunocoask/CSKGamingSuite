@@ -94,6 +94,7 @@ public partial class MainWindow
     private void DashChart_SizeChanged(object sender, SizeChangedEventArgs e)
     {
         if (DashBentoLayout != null && DashBentoLayout.Visibility == Visibility.Visible) DrawBentoSpark();
+        else if (DashMagentaLayout != null && DashMagentaLayout.Visibility == Visibility.Visible) DrawMagentaSpark();
         else DrawDashChart();
     }
     private void DashBench_Click(object sender, RoutedEventArgs e) => NavBench.IsChecked = true;
@@ -103,7 +104,8 @@ public partial class MainWindow
     private void DashGo_Click(object sender, RoutedEventArgs e)
     {
         if (sender is not FrameworkElement { Tag: string page }) return;
-        var nav = new RadioButton[] { NavSensors, NavGpu, NavSystem, NavDisks }.FirstOrDefault(n => (string)n.Tag == page);
+        var nav = new RadioButton[] { NavSensors, NavGpu, NavSystem, NavDisks, NavGames, NavOptimize, NavBench, NavOc, NavLauncher }
+            .FirstOrDefault(n => (string)n.Tag == page);
         if (nav != null) nav.IsChecked = true;
     }
 
@@ -112,6 +114,16 @@ public partial class MainWindow
         if (DashBentoLayout != null && DashBentoLayout.Visibility == Visibility.Visible)
         {
             UpdateBentoDashboard();
+            return;
+        }
+        if (DashCobaltLayout != null && DashCobaltLayout.Visibility == Visibility.Visible)
+        {
+            UpdateCobaltDashboard();
+            return;
+        }
+        if (DashMagentaLayout != null && DashMagentaLayout.Visibility == Visibility.Visible)
+        {
+            UpdateMagentaDashboard();
             return;
         }
         DrawDashChart();
@@ -244,6 +256,186 @@ public partial class MainWindow
         area.Points.Add(new Point(0, h));
         BentoSparkCanvas.Children.Add(area);
         BentoSparkCanvas.Children.Add(polyLine);
+    }
+
+    private void UpdateCobaltDashboard()
+    {
+        float? cpuT = _monitor.CpuTemperature;
+        float? gpuT = MainGpuTemp();
+        var activeBlue = new SolidColorBrush(Color.FromRgb(56, 189, 248));
+        activeBlue.Freeze();
+
+        CobaltCpuModel.Text = string.IsNullOrWhiteSpace(_cpuName) ? "Processador" : GameCatalog.ShortCpuName(_cpuName);
+        CobaltCpuTempVal.Text = cpuT is float ct ? $"{ct:0}°C" : "—°C";
+        DrawSegmentedArc(CobaltCpuArcCanvas, cpuT is float ct2 ? Math.Clamp((ct2 - 20) / 80.0, 0.04, 1) : 0.25, activeBlue);
+
+        CobaltGpuModel.Text = _gpus.Count > 0 ? GameCatalog.ShortGpuName(_gpus[0].Name) : "Placa de Vídeo";
+        CobaltGpuTempVal.Text = gpuT is float gt ? $"{gt:0}°C" : "—°C";
+        DrawSegmentedArc(CobaltGpuArcCanvas, gpuT is float gt2 ? Math.Clamp((gt2 - 20) / 80.0, 0.04, 1) : 0.2, activeBlue);
+
+        double ramFrac = 0;
+        var (total, avail) = Optimizer.MemoryStatus();
+        if (total > 0)
+        {
+            ramFrac = (double)(total - avail) / total;
+            CobaltRamSub.Text = $"{total / 1073741824.0:0} GB RAM";
+            CobaltRamUtilVal.Text = $"{ramFrac:P0}";
+        }
+        DrawSegmentedArc(CobaltRamArcCanvas, ramFrac, activeBlue);
+
+        double diskFrac = 0;
+        if (_drives.FirstOrDefault(d => d.Letter.StartsWith("C", StringComparison.OrdinalIgnoreCase)) is { } c0)
+        {
+            diskFrac = c0.Total > 0 ? (double)(c0.Total - c0.Free) / c0.Total : 0;
+            CobaltDiskSub.Text = c0.Disk.Length > 0 ? c0.Disk : c0.Kind;
+            CobaltDiskUtilVal.Text = $"{diskFrac:P0}";
+        }
+        DrawSegmentedArc(CobaltDiskArcCanvas, diskFrac, activeBlue);
+
+        // Saúde geral e régua
+        int score = 100;
+        if ((cpuT ?? 0) >= 85 || (gpuT ?? 0) >= 85) score -= 20;
+        if (ramFrac > 0.90) score -= 10;
+        if (diskFrac > 0.92) score -= 10;
+        CobaltHealthPct.Text = $"{score}%";
+        CobaltHealthBar.Height = 210 * (score / 100.0);
+        CobaltHealthLabel.Text = score >= 85 ? "Bom" : "Atenção";
+        DrawCobaltScale();
+    }
+
+    private void DrawSegmentedArc(Canvas canvas, double fraction, Brush active)
+    {
+        canvas.Children.Clear();
+        double cx = canvas.Width / 2, cy = canvas.Height - 16;
+        double rIn = 58, rOut = 74;
+        const int segments = 24;
+        int lit = (int)Math.Round(Math.Clamp(fraction, 0, 1) * segments);
+        var dim = new SolidColorBrush(Color.FromArgb(0x28, 255, 255, 255));
+        dim.Freeze();
+
+        for (int i = 0; i < segments; i++)
+        {
+            // De 180° (esquerda) até 0° (direita)
+            double deg = 180.0 - (180.0 * i / (segments - 1));
+            double rad = deg * Math.PI / 180.0;
+            canvas.Children.Add(new Line
+            {
+                X1 = cx + rIn * Math.Cos(rad),
+                Y1 = cy - rIn * Math.Sin(rad),
+                X2 = cx + rOut * Math.Cos(rad),
+                Y2 = cy - rOut * Math.Sin(rad),
+                Stroke = i < lit ? active : dim,
+                StrokeThickness = 2.5,
+                StrokeStartLineCap = PenLineCap.Round,
+                StrokeEndLineCap = PenLineCap.Round
+            });
+        }
+    }
+
+    private void DrawCobaltScale()
+    {
+        if (CobaltScaleCanvas.Children.Count > 0) return;
+        var tick = new SolidColorBrush(Color.FromArgb(0x40, 255, 255, 255));
+        tick.Freeze();
+        for (int i = 0; i <= 20; i++)
+        {
+            double y = i * 9.0;
+            CobaltScaleCanvas.Children.Add(new Line
+            {
+                X1 = 0, X2 = i % 5 == 0 ? 14 : 7, Y1 = y, Y2 = y,
+                Stroke = tick, StrokeThickness = i % 5 == 0 ? 1.3 : 0.8
+            });
+        }
+    }
+
+    private void UpdateMagentaDashboard()
+    {
+        MagClockTxt.Text = DateTime.Now.ToString("HH:mm");
+        float? cpuL = _monitor.CpuLoad;
+        float? cpuT = _monitor.CpuTemperature;
+        MagPillCpu.Text = cpuL is float cl ? $"{cl:0}%" : "—";
+        MagCpuLoadBig.Text = cpuL is float cl2 ? $"{cl2:0}%" : "—";
+        MagCpuTempSmall.Text = cpuT is float ct ? $"{ct:0} °C" : "— °C";
+
+        var up = TimeSpan.FromMilliseconds(Environment.TickCount64);
+        string upStr = up.TotalHours >= 1 ? $"{(int)up.TotalHours}h" : $"{up.Minutes}m";
+        MagPillUp.Text = upStr;
+        MagUptimeVal.Text = upStr;
+        MagUptimeSub.Text = $"{up.Days}d {up.Hours}h {up.Minutes}m";
+
+        var mag = (Brush)FindResource("Accent");
+        DrawMagentaRing(MagUptimeCanvas, Math.Clamp(up.TotalHours / 24.0, 0.12, 1), mag);
+
+        var (total, avail) = Optimizer.MemoryStatus();
+        if (total > 0)
+        {
+            double usedFrac = (double)(total - avail) / total;
+            double freeFrac = 1.0 - usedFrac;
+            MagPillRam.Text = $"{usedFrac:P0}";
+            MagFreeRamPct.Text = $"{freeFrac:P0}";
+            MagFreeRamSub.Text = $"{avail / 1073741824.0:0.0} GB livres";
+            MagMemPct.Text = $"{usedFrac:P0}";
+            MagMemSub.Text = $"{(total - avail) / 1073741824.0:0.0} / {total / 1073741824.0:0} GB";
+            DrawMagentaRing(MagFreeRamCanvas, freeFrac, mag);
+            DrawMagentaRing(MagMemCanvas, usedFrac, mag);
+        }
+
+        if (_drives.FirstOrDefault(d => d.Letter.StartsWith("C", StringComparison.OrdinalIgnoreCase)) is { } c0)
+        {
+            double diskFrac = c0.Total > 0 ? (double)(c0.Total - c0.Free) / c0.Total : 0;
+            MagDiskPct.Text = $"{diskFrac:P0}";
+            MagDiskSub.Text = $"{DriveCard.Fmt(c0.Free)} livres";
+            DrawMagentaRing(MagDiskCanvas, diskFrac, mag);
+        }
+
+        MagSysHost.Text = Environment.MachineName;
+        MagSysCpu.Text = string.IsNullOrWhiteSpace(_cpuName) ? "—" : GameCatalog.ShortCpuName(_cpuName);
+        MagSysGpu.Text = _gpus.Count > 0 ? GameCatalog.ShortGpuName(_gpus[0].Name) : "—";
+        MagChkMute.IsChecked = _audio.IsMasterMuted();
+
+        var runs = _settings.BenchRuns.Where(r => r.Multi != null).ToList();
+        MagBenchTxt.Text = runs.Count > 0 ? $"{runs[0].Multi:N0} pts" : "Pronto";
+
+        DrawMagentaSpark();
+    }
+
+    private void DrawMagentaRing(Canvas canvas, double fraction, Brush stroke)
+    {
+        canvas.Children.Clear();
+        double cx = canvas.Width / 2, cy = canvas.Height / 2, r = 29;
+        var track = new SolidColorBrush(Color.FromArgb(0x28, 224, 64, 251));
+        track.Freeze();
+        canvas.Children.Add(BuildArcPath(cx, cy, r, -90, 359.9, track, 6));
+        canvas.Children.Add(BuildArcPath(cx, cy, r, -90, 359.9 * Math.Clamp(fraction, 0.03, 0.99), stroke, 6));
+    }
+
+    private void DrawMagentaSpark()
+    {
+        MagCpuSparkCanvas.Children.Clear();
+        double w = MagCpuSparkCanvas.ActualWidth, h = MagCpuSparkCanvas.ActualHeight;
+        if (w < 20 || h < 20) return;
+
+        var pts = _dash.TakeLast(60).Select(s => (double)(s.CpuL ?? 10)).ToList();
+        if (pts.Count < 2) pts = new List<double> { 15, 22, 18, 35, 29, 41, 32 };
+
+        var neon = Color.FromRgb(224, 64, 251);
+        var line = new Polyline { Stroke = new SolidColorBrush(neon), StrokeThickness = 2.2, StrokeLineJoin = PenLineJoin.Round };
+        var area = new Polygon
+        {
+            Fill = new LinearGradientBrush(Color.FromArgb(0x55, 224, 64, 251), Color.FromArgb(0x04, 224, 64, 251), new Point(0, 0), new Point(0, 1))
+        };
+
+        for (int i = 0; i < pts.Count; i++)
+        {
+            double x = w * i / Math.Max(1, pts.Count - 1);
+            double y = h - 4 - Math.Clamp(pts[i] / 100.0, 0.04, 0.95) * (h - 10);
+            line.Points.Add(new Point(x, y));
+            area.Points.Add(new Point(x, y));
+        }
+        area.Points.Add(new Point(w, h));
+        area.Points.Add(new Point(0, h));
+        MagCpuSparkCanvas.Children.Add(area);
+        MagCpuSparkCanvas.Children.Add(line);
     }
 
     private void UpdateAfterburnerGauges()

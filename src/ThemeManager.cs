@@ -31,7 +31,7 @@ public sealed record SkinDefinition(
     bool UseTrafficLights,
     bool DockedSidebar,
     bool ShowAfterburnerDeck,
-    bool ShowBentoNoirDeck,
+    string LayoutVariant,
     string TextureType,
     string BadgeText,
     double CardRadius,
@@ -64,7 +64,7 @@ public static class ThemeManager
             UseTrafficLights: false,
             DockedSidebar: true,
             ShowAfterburnerDeck: false,
-            ShowBentoNoirDeck: true,
+            LayoutVariant: "bento",
             TextureType: "obsidian",
             BadgeText: "NOIR BENTO",
             CardRadius: 16,
@@ -82,6 +82,56 @@ public static class ThemeManager
                 ThumbBrush: "#232830", ThumbHover: "#10D68E", ThumbDrag: "#4CC9F0")
         ),
         new(
+            Id: "cobalt-arc",
+            Name: "Cobalt Arc",
+            Description: "Azul cobalto profundo com medidores segmentados em arco e barra de saúde",
+            SupportsLightDark: false,
+            UseTrafficLights: false,
+            DockedSidebar: true,
+            ShowAfterburnerDeck: false,
+            LayoutVariant: "cobalt",
+            TextureType: "cobalt",
+            BadgeText: "COBALT ARC",
+            CardRadius: 14,
+            ButtonRadius: 12,
+            SidebarRadius: 0,
+            NavRadius: 10,
+            ChipRadius: 12,
+            SwatchPrimary: "#2979FF",
+            SwatchBg: "#060914",
+            Dark: new(
+                Bg: "#060914", Panel: "#080D1F", Card: "#0B0E1A", Hover: "#141B30",
+                Line: "#17203A", LineStrong: "#2979FF", Fg: "#F1F5FF", Muted: "#8492B4",
+                Faint: "#4A5678", Ink: "#060914", Accent: "#2979FF", AccentInk: "#FFFFFF",
+                AccentSecondary: "#38BDF8", Gold: "#2979FF", GoldSoft: "#38BDF8",
+                ThumbBrush: "#1B2542", ThumbHover: "#2979FF", ThumbDrag: "#38BDF8")
+        ),
+        new(
+            Id: "magenta-pulse",
+            Name: "Magenta Pulse",
+            Description: "Painel neon magenta e violeta com anéis luminosos e atalhos gamer",
+            SupportsLightDark: false,
+            UseTrafficLights: false,
+            DockedSidebar: true,
+            ShowAfterburnerDeck: false,
+            LayoutVariant: "magenta",
+            TextureType: "magenta",
+            BadgeText: "MAGENTA SUITE",
+            CardRadius: 12,
+            ButtonRadius: 10,
+            SidebarRadius: 0,
+            NavRadius: 10,
+            ChipRadius: 12,
+            SwatchPrimary: "#E040FB",
+            SwatchBg: "#0B0712",
+            Dark: new(
+                Bg: "#0B0712", Panel: "#110B1D", Card: "#160F24", Hover: "#241838",
+                Line: "#2C1D42", LineStrong: "#E040FB", Fg: "#F8F2FF", Muted: "#A490BE",
+                Faint: "#63507D", Ink: "#0B0712", Accent: "#E040FB", AccentInk: "#FFFFFF",
+                AccentSecondary: "#9333EA", Gold: "#E040FB", GoldSoft: "#F472B6",
+                ThumbBrush: "#2C1D42", ThumbHover: "#E040FB", ThumbDrag: "#F472B6")
+        ),
+        new(
             Id: "clean-glass",
             Name: "Clean Glass",
             Description: "Minimalista com cantos suaves e painel flutuante",
@@ -89,7 +139,7 @@ public static class ThemeManager
             UseTrafficLights: true,
             DockedSidebar: false,
             ShowAfterburnerDeck: false,
-            ShowBentoNoirDeck: false,
+            LayoutVariant: "classic",
             TextureType: "solid",
             BadgeText: "",
             CardRadius: 14,
@@ -120,7 +170,7 @@ public static class ThemeManager
             UseTrafficLights: false,
             DockedSidebar: true,
             ShowAfterburnerDeck: false,
-            ShowBentoNoirDeck: false,
+            LayoutVariant: "classic",
             TextureType: "gradient",
             BadgeText: "FLUENT",
             CardRadius: 8,
@@ -151,7 +201,7 @@ public static class ThemeManager
             UseTrafficLights: false,
             DockedSidebar: true,
             ShowAfterburnerDeck: true,
-            ShowBentoNoirDeck: false,
+            LayoutVariant: "classic",
             TextureType: "grid",
             BadgeText: "TELEMETRY HUD",
             CardRadius: 3,
@@ -176,7 +226,7 @@ public static class ThemeManager
             UseTrafficLights: false,
             DockedSidebar: false,
             ShowAfterburnerDeck: true,
-            ShowBentoNoirDeck: false,
+            LayoutVariant: "classic",
             TextureType: "scanlines",
             BadgeText: "CYBER DECK",
             CardRadius: 2,
@@ -201,7 +251,7 @@ public static class ThemeManager
             UseTrafficLights: false,
             DockedSidebar: false,
             ShowAfterburnerDeck: true,
-            ShowBentoNoirDeck: false,
+            LayoutVariant: "classic",
             TextureType: "carbon",
             BadgeText: "STEALTH MATRIX",
             CardRadius: 6,
@@ -226,7 +276,7 @@ public static class ThemeManager
             UseTrafficLights: false,
             DockedSidebar: true,
             ShowAfterburnerDeck: true,
-            ShowBentoNoirDeck: false,
+            LayoutVariant: "classic",
             TextureType: "diagonal",
             BadgeText: "OVERDRIVE",
             CardRadius: 4,
@@ -251,7 +301,7 @@ public static class ThemeManager
             UseTrafficLights: false,
             DockedSidebar: false,
             ShowAfterburnerDeck: true,
-            ShowBentoNoirDeck: false,
+            LayoutVariant: "classic",
             TextureType: "gradient",
             BadgeText: "OC LAB",
             CardRadius: 10,
@@ -331,6 +381,18 @@ public static class ThemeManager
 
         switch (skin.TextureType)
         {
+            case "cobalt":
+            {
+                var b = new LinearGradientBrush(Color.FromRgb(5, 9, 24), Color.FromRgb(8, 18, 48), new Point(0, 0), new Point(0, 1));
+                b.Freeze();
+                return b;
+            }
+            case "magenta":
+            {
+                var b = new LinearGradientBrush(Color.FromRgb(11, 7, 18), Color.FromRgb(22, 11, 34), new Point(0, 0), new Point(1, 1));
+                b.Freeze();
+                return b;
+            }
             case "obsidian":
             {
                 var b = new LinearGradientBrush
@@ -429,11 +491,23 @@ public static class ThemeManager
 
     private static Brush BuildCardBorderBrush(SkinDefinition skin, SkinPalette p)
     {
-        if (skin.ShowBentoNoirDeck)
+        if (skin.LayoutVariant == "bento")
         {
             var top = Color.FromRgb(46, 54, 64);
             var bot = Color.FromRgb(23, 26, 32);
             var b = new LinearGradientBrush(top, bot, new Point(0, 0), new Point(1, 1));
+            b.Freeze();
+            return b;
+        }
+        if (skin.LayoutVariant == "cobalt")
+        {
+            var b = new LinearGradientBrush(Color.FromRgb(28, 42, 74), Color.FromRgb(30, 80, 190), new Point(0, 0), new Point(0, 1));
+            b.Freeze();
+            return b;
+        }
+        if (skin.LayoutVariant == "magenta")
+        {
+            var b = new LinearGradientBrush(Color.FromArgb(0x70, 224, 64, 251), Color.FromRgb(44, 29, 66), new Point(0, 0), new Point(1, 1));
             b.Freeze();
             return b;
         }

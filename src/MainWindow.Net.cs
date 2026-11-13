@@ -135,8 +135,10 @@ public partial class MainWindow
         SkinBadgeText.Text = skin.BadgeText;
 
         DashAfterburnerDeck.Visibility = skin.ShowAfterburnerDeck ? Visibility.Visible : Visibility.Collapsed;
-        DashBentoLayout.Visibility = skin.ShowBentoNoirDeck ? Visibility.Visible : Visibility.Collapsed;
-        DashClassicLayout.Visibility = skin.ShowBentoNoirDeck ? Visibility.Collapsed : Visibility.Visible;
+        DashBentoLayout.Visibility = skin.LayoutVariant == "bento" ? Visibility.Visible : Visibility.Collapsed;
+        DashCobaltLayout.Visibility = skin.LayoutVariant == "cobalt" ? Visibility.Visible : Visibility.Collapsed;
+        DashMagentaLayout.Visibility = skin.LayoutVariant == "magenta" ? Visibility.Visible : Visibility.Collapsed;
+        DashClassicLayout.Visibility = skin.LayoutVariant == "classic" ? Visibility.Visible : Visibility.Collapsed;
 
         TitleLogo.Source = new System.Windows.Media.Imaging.BitmapImage(
             new Uri(light ? "pack://application:,,,/Assets/logo-dark.png" : "pack://application:,,,/Assets/logo.png"));

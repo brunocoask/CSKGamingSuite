@@ -828,6 +828,517 @@
                             </Grid>
                         </StackPanel>
 
+                        <!-- ===== LAYOUT COBALT ARC (Skin Cobalt Arc) ===== -->
+                        <StackPanel x:Name="DashCobaltLayout" Visibility="Collapsed">
+                            <!-- Header de Boas-vindas -->
+                            <Grid Margin="0,2,0,16">
+                                <StackPanel>
+                                    <TextBlock Text="Bem-vindo de volta!" FontSize="26" FontWeight="SemiBold" Foreground="{DynamicResource Fg}"/>
+                                    <TextBlock Text="Como está o seu PC hoje?" FontSize="12.5" Foreground="{DynamicResource Muted}" Margin="0,2,0,0"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                    <Button Style="{StaticResource OutlineButton}" BorderBrush="{DynamicResource Line}" Padding="14,7" FontSize="12" Margin="0,0,8,0" Tag="PageSensors" Click="DashGo_Click">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="Sensores" VerticalAlignment="Center"/>
+                                            <TextBlock Text=" &#xE76C;" FontFamily="{StaticResource Icons}" FontSize="10" VerticalAlignment="Center" Margin="6,1,0,0"/>
+                                        </StackPanel>
+                                    </Button>
+                                    <Button Style="{StaticResource OutlineButton}" BorderBrush="{DynamicResource Line}" Padding="14,7" FontSize="12" Tag="PageSystem" Click="DashGo_Click">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="Meu PC" VerticalAlignment="Center"/>
+                                            <TextBlock Text=" &#xE76C;" FontFamily="{StaticResource Icons}" FontSize="10" VerticalAlignment="Center" Margin="6,1,0,0"/>
+                                        </StackPanel>
+                                    </Button>
+                                </StackPanel>
+                            </Grid>
+
+                            <!-- Corpo Principal: Barra de Saúde Vertical + 4 Arcos Segmentados -->
+                            <Grid Margin="0,0,0,14">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="156"/>
+                                    <ColumnDefinition Width="14"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Barra Vertical de Saúde (Health Thermometer) -->
+                                <Border Grid.Column="0" Style="{StaticResource CardBorder}" Padding="16,16">
+                                    <DockPanel>
+                                        <StackPanel DockPanel.Dock="Top" HorizontalAlignment="Center" Margin="0,0,0,14">
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,8">
+                                                <TextBlock Text="&#xEB51;" FontFamily="{StaticResource Icons}" FontSize="12" Foreground="{DynamicResource Muted}" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                                <TextBlock Text="Saúde" FontSize="12.5" Foreground="{DynamicResource Muted}" VerticalAlignment="Center"/>
+                                            </StackPanel>
+                                            <Border Background="#122B22" BorderBrush="#10D68E" BorderThickness="1" CornerRadius="10" Padding="10,3" HorizontalAlignment="Center">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Ellipse x:Name="CobaltHealthDot" Width="6" Height="6" Fill="#10D68E" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                                    <TextBlock x:Name="CobaltHealthLabel" Text="Bom" FontSize="11" FontWeight="SemiBold" Foreground="#10D68E"/>
+                                                </StackPanel>
+                                            </Border>
+                                        </StackPanel>
+
+                                        <Grid HorizontalAlignment="Center" VerticalAlignment="Stretch" MinHeight="220">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="10"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <!-- Barra gradiente vertical -->
+                                            <Border Width="16" Height="210" Background="#141B30" CornerRadius="8" ClipToBounds="True" VerticalAlignment="Bottom">
+                                                <Border x:Name="CobaltHealthBar" Height="195" VerticalAlignment="Bottom" CornerRadius="8">
+                                                    <Border.Background>
+                                                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                                            <GradientStop Color="#2979FF" Offset="0.0"/>
+                                                            <GradientStop Color="#7C3AED" Offset="0.55"/>
+                                                            <GradientStop Color="#F97316" Offset="1.0"/>
+                                                        </LinearGradientBrush>
+                                                    </Border.Background>
+                                                </Border>
+                                            </Border>
+                                            <StackPanel Grid.Column="2" VerticalAlignment="Top" Margin="0,6,0,0">
+                                                <TextBlock x:Name="CobaltHealthPct" Text="100%" FontFamily="{StaticResource Mono}" FontSize="12" FontWeight="Bold" Foreground="{DynamicResource Fg}"/>
+                                                <Canvas x:Name="CobaltScaleCanvas" Width="28" Height="185" Margin="0,6,0,0"/>
+                                            </StackPanel>
+                                        </Grid>
+                                    </DockPanel>
+                                </Border>
+
+                                <!-- Grid 2x2 dos 4 Medidores Segmentados -->
+                                <Grid Grid.Column="2">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="14"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="14"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- Card 1: CPU -->
+                                    <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource CardBorder}" Padding="20,16">
+                                        <Border.Background>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                                <GradientStop Color="#0B0E1A" Offset="0.4"/>
+                                                <GradientStop Color="#0D193D" Offset="1.0"/>
+                                            </LinearGradientBrush>
+                                        </Border.Background>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <DockPanel>
+                                                <Button DockPanel.Dock="Bottom" Style="{StaticResource ActionButton}" HorizontalAlignment="Left" Padding="14,5" FontSize="11.5" Content="Ver mais" Tag="PageSensors" Click="DashGo_Click"/>
+                                                <StackPanel>
+                                                    <Border Width="28" Height="28" CornerRadius="7" Background="#141C33" BorderBrush="#23325A" BorderThickness="1" HorizontalAlignment="Left" Margin="0,0,0,12">
+                                                        <TextBlock Text="&#xE950;" FontFamily="{StaticResource Icons}" FontSize="13" Foreground="{DynamicResource Fg}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                    </Border>
+                                                    <TextBlock Text="CPU" FontSize="18" FontWeight="SemiBold" Foreground="{DynamicResource Fg}"/>
+                                                    <TextBlock x:Name="CobaltCpuModel" Text="Processador" FontSize="11.5" Foreground="{DynamicResource Muted}" TextTrimming="CharacterEllipsis" Margin="0,2,8,0"/>
+                                                </StackPanel>
+                                            </DockPanel>
+                                            <Grid Grid.Column="1" Width="168" Height="116" VerticalAlignment="Center">
+                                                <Canvas x:Name="CobaltCpuArcCanvas" Width="168" Height="116"/>
+                                                <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,14">
+                                                    <TextBlock x:Name="CobaltCpuTempVal" Text="—°C" FontSize="26" FontWeight="SemiBold" Foreground="{DynamicResource Fg}" HorizontalAlignment="Center"/>
+                                                    <TextBlock Text="Temperatura" FontSize="11" Foreground="{DynamicResource Muted}" HorizontalAlignment="Center"/>
+                                                </StackPanel>
+                                            </Grid>
+                                        </Grid>
+                                    </Border>
+
+                                    <!-- Card 2: GPU -->
+                                    <Border Grid.Row="0" Grid.Column="2" Style="{StaticResource CardBorder}" Padding="20,16">
+                                        <Border.Background>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                                <GradientStop Color="#0B0E1A" Offset="0.4"/>
+                                                <GradientStop Color="#0D193D" Offset="1.0"/>
+                                            </LinearGradientBrush>
+                                        </Border.Background>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <DockPanel>
+                                                <Button DockPanel.Dock="Bottom" Style="{StaticResource ActionButton}" HorizontalAlignment="Left" Padding="14,5" FontSize="11.5" Content="Ver mais" Tag="PageGpu" Click="DashGo_Click"/>
+                                                <StackPanel>
+                                                    <Border Width="28" Height="28" CornerRadius="7" Background="#141C33" BorderBrush="#23325A" BorderThickness="1" HorizontalAlignment="Left" Margin="0,0,0,12">
+                                                        <TextBlock Text="&#xE7F4;" FontFamily="{StaticResource Icons}" FontSize="13" Foreground="{DynamicResource Fg}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                    </Border>
+                                                    <TextBlock Text="GPU" FontSize="18" FontWeight="SemiBold" Foreground="{DynamicResource Fg}"/>
+                                                    <TextBlock x:Name="CobaltGpuModel" Text="Placa de Vídeo" FontSize="11.5" Foreground="{DynamicResource Muted}" TextTrimming="CharacterEllipsis" Margin="0,2,8,0"/>
+                                                </StackPanel>
+                                            </DockPanel>
+                                            <Grid Grid.Column="1" Width="168" Height="116" VerticalAlignment="Center">
+                                                <Canvas x:Name="CobaltGpuArcCanvas" Width="168" Height="116"/>
+                                                <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,14">
+                                                    <TextBlock x:Name="CobaltGpuTempVal" Text="—°C" FontSize="26" FontWeight="SemiBold" Foreground="{DynamicResource Fg}" HorizontalAlignment="Center"/>
+                                                    <TextBlock Text="Temperatura" FontSize="11" Foreground="{DynamicResource Muted}" HorizontalAlignment="Center"/>
+                                                </StackPanel>
+                                            </Grid>
+                                        </Grid>
+                                    </Border>
+
+                                    <!-- Card 3: RAM -->
+                                    <Border Grid.Row="2" Grid.Column="0" Style="{StaticResource CardBorder}" Padding="20,16">
+                                        <Border.Background>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                                <GradientStop Color="#0B0E1A" Offset="0.4"/>
+                                                <GradientStop Color="#0D193D" Offset="1.0"/>
+                                            </LinearGradientBrush>
+                                        </Border.Background>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <DockPanel>
+                                                <Button DockPanel.Dock="Bottom" Style="{StaticResource ActionButton}" HorizontalAlignment="Left" Padding="14,5" FontSize="11.5" Content="Ver mais" Tag="PageSystem" Click="DashGo_Click"/>
+                                                <StackPanel>
+                                                    <Border Width="28" Height="28" CornerRadius="7" Background="#141C33" BorderBrush="#23325A" BorderThickness="1" HorizontalAlignment="Left" Margin="0,0,0,12">
+                                                        <TextBlock Text="&#xE945;" FontFamily="{StaticResource Icons}" FontSize="13" Foreground="{DynamicResource Fg}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                    </Border>
+                                                    <TextBlock Text="RAM" FontSize="18" FontWeight="SemiBold" Foreground="{DynamicResource Fg}"/>
+                                                    <TextBlock x:Name="CobaltRamSub" Text="Memória" FontSize="11.5" Foreground="{DynamicResource Muted}" TextTrimming="CharacterEllipsis" Margin="0,2,8,0"/>
+                                                </StackPanel>
+                                            </DockPanel>
+                                            <Grid Grid.Column="1" Width="168" Height="116" VerticalAlignment="Center">
+                                                <Canvas x:Name="CobaltRamArcCanvas" Width="168" Height="116"/>
+                                                <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,14">
+                                                    <TextBlock x:Name="CobaltRamUtilVal" Text="—%" FontSize="26" FontWeight="SemiBold" Foreground="{DynamicResource Fg}" HorizontalAlignment="Center"/>
+                                                    <TextBlock Text="Utilização" FontSize="11" Foreground="{DynamicResource Muted}" HorizontalAlignment="Center"/>
+                                                </StackPanel>
+                                            </Grid>
+                                        </Grid>
+                                    </Border>
+
+                                    <!-- Card 4: Storage -->
+                                    <Border Grid.Row="2" Grid.Column="2" Style="{StaticResource CardBorder}" Padding="20,16">
+                                        <Border.Background>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                                <GradientStop Color="#0B0E1A" Offset="0.4"/>
+                                                <GradientStop Color="#0D193D" Offset="1.0"/>
+                                            </LinearGradientBrush>
+                                        </Border.Background>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <DockPanel>
+                                                <Button DockPanel.Dock="Bottom" Style="{StaticResource ActionButton}" HorizontalAlignment="Left" Padding="14,5" FontSize="11.5" Content="Ver mais" Tag="PageDisks" Click="DashGo_Click"/>
+                                                <StackPanel>
+                                                    <Border Width="28" Height="28" CornerRadius="7" Background="#141C33" BorderBrush="#23325A" BorderThickness="1" HorizontalAlignment="Left" Margin="0,0,0,12">
+                                                        <TextBlock Text="&#xEDA2;" FontFamily="{StaticResource Icons}" FontSize="13" Foreground="{DynamicResource Fg}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                    </Border>
+                                                    <TextBlock Text="Armazenamento" FontSize="18" FontWeight="SemiBold" Foreground="{DynamicResource Fg}"/>
+                                                    <TextBlock x:Name="CobaltDiskSub" Text="Disco C:" FontSize="11.5" Foreground="{DynamicResource Muted}" TextTrimming="CharacterEllipsis" Margin="0,2,8,0"/>
+                                                </StackPanel>
+                                            </DockPanel>
+                                            <Grid Grid.Column="1" Width="168" Height="116" VerticalAlignment="Center">
+                                                <Canvas x:Name="CobaltDiskArcCanvas" Width="168" Height="116"/>
+                                                <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,14">
+                                                    <TextBlock x:Name="CobaltDiskUtilVal" Text="—%" FontSize="26" FontWeight="SemiBold" Foreground="{DynamicResource Fg}" HorizontalAlignment="Center"/>
+                                                    <TextBlock Text="Utilização" FontSize="11" Foreground="{DynamicResource Muted}" HorizontalAlignment="Center"/>
+                                                </StackPanel>
+                                            </Grid>
+                                        </Grid>
+                                    </Border>
+                                </Grid>
+                            </Grid>
+
+                            <!-- Linha Inferior Cobalt: 4 Atalhos -->
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="10"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="14"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource CardBorder}" Padding="18,14" Cursor="Hand" Tag="PageGames" MouseLeftButtonUp="DashGo_Click">
+                                    <DockPanel>
+                                        <Border DockPanel.Dock="Right" Width="28" Height="28" CornerRadius="14" Background="{DynamicResource Hover}" VerticalAlignment="Center">
+                                            <TextBlock Text="&#xE76C;" FontFamily="{StaticResource Icons}" FontSize="10" Foreground="{DynamicResource Muted}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="&#xEC49;" FontFamily="{StaticResource Icons}" FontSize="18" Foreground="{DynamicResource AccentSecondary}" Margin="0,0,14,0" VerticalAlignment="Center"/>
+                                            <StackPanel>
+                                                <TextBlock Text="Análise de Jogos &amp; FPS" FontSize="13.5" FontWeight="SemiBold" Foreground="{DynamicResource Fg}"/>
+                                                <TextBlock Text="Veja estimativas de desempenho em 1080p, 1440p e 4K" FontSize="11" Foreground="{DynamicResource Muted}"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </DockPanel>
+                                </Border>
+
+                                <Border Grid.Row="0" Grid.Column="2" Style="{StaticResource CardBorder}" Padding="18,14" Cursor="Hand" Tag="PageOptimize" MouseLeftButtonUp="DashGo_Click">
+                                    <DockPanel>
+                                        <Border DockPanel.Dock="Right" Width="28" Height="28" CornerRadius="14" Background="{DynamicResource Hover}" VerticalAlignment="Center">
+                                            <TextBlock Text="&#xE76C;" FontFamily="{StaticResource Icons}" FontSize="10" Foreground="{DynamicResource Muted}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="&#xE9F3;" FontFamily="{StaticResource Icons}" FontSize="18" Foreground="{DynamicResource AccentSecondary}" Margin="0,0,14,0" VerticalAlignment="Center"/>
+                                            <StackPanel>
+                                                <TextBlock Text="Otimizar meu PC" FontSize="13.5" FontWeight="SemiBold" Foreground="{DynamicResource Fg}"/>
+                                                <TextBlock Text="Desempenho máximo e latência reduzida em um clique" FontSize="11" Foreground="{DynamicResource Muted}"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </DockPanel>
+                                </Border>
+
+                                <Border Grid.Row="2" Grid.Column="0" Style="{StaticResource CardBorder}" Padding="18,14" Cursor="Hand" Tag="PageBench" MouseLeftButtonUp="DashGo_Click">
+                                    <DockPanel>
+                                        <Border DockPanel.Dock="Right" Width="28" Height="28" CornerRadius="14" Background="{DynamicResource Hover}" VerticalAlignment="Center">
+                                            <TextBlock Text="&#xE76C;" FontFamily="{StaticResource Icons}" FontSize="10" Foreground="{DynamicResource Muted}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="&#xE8B9;" FontFamily="{StaticResource Icons}" FontSize="18" Foreground="{DynamicResource AccentSecondary}" Margin="0,0,14,0" VerticalAlignment="Center"/>
+                                            <StackPanel>
+                                                <TextBlock Text="Benchmark Gráfico 3D" FontSize="13.5" FontWeight="SemiBold" Foreground="{DynamicResource Fg}"/>
+                                                <TextBlock Text="Teste Ray Tracing e estabilidade de frametime" FontSize="11" Foreground="{DynamicResource Muted}"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </DockPanel>
+                                </Border>
+
+                                <Border Grid.Row="2" Grid.Column="2" Style="{StaticResource CardBorder}" Padding="18,14" Cursor="Hand" Tag="PageOc" MouseLeftButtonUp="DashGo_Click">
+                                    <DockPanel>
+                                        <Border DockPanel.Dock="Right" Width="28" Height="28" CornerRadius="14" Background="{DynamicResource Hover}" VerticalAlignment="Center">
+                                            <TextBlock Text="&#xE76C;" FontFamily="{StaticResource Icons}" FontSize="10" Foreground="{DynamicResource Muted}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="&#xEC4A;" FontFamily="{StaticResource Icons}" FontSize="18" Foreground="{DynamicResource AccentSecondary}" Margin="0,0,14,0" VerticalAlignment="Center"/>
+                                            <StackPanel>
+                                                <TextBlock Text="Overclock Seguro" FontSize="13.5" FontWeight="SemiBold" Foreground="{DynamicResource Fg}"/>
+                                                <TextBlock Text="Ajuste fino de clock da GPU com proteção automática" FontSize="11" Foreground="{DynamicResource Muted}"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </DockPanel>
+                                </Border>
+                            </Grid>
+                        </StackPanel>
+
+                        <!-- ===== LAYOUT MAGENTA PULSE (Skin Magenta Pulse) ===== -->
+                        <StackPanel x:Name="DashMagentaLayout" Visibility="Collapsed">
+                            <!-- Cabeçalho + Pílulas de Status -->
+                            <Grid Margin="0,0,0,14">
+                                <StackPanel>
+                                    <TextBlock Text="Bem-vindo ao CSK Performance Suite" FontSize="22" FontWeight="Bold" Foreground="{DynamicResource Accent}"/>
+                                    <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                                        <Ellipse Width="7" Height="7" Fill="#10D68E" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                        <TextBlock Text="Sistema Online" FontSize="11.5" Foreground="#10D68E" Margin="0,0,14,0"/>
+                                        <TextBlock x:Name="MagClockTxt" Text="00:00" FontFamily="{StaticResource Mono}" FontSize="11.5" Foreground="{DynamicResource Muted}"/>
+                                    </StackPanel>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                    <Border Background="#2A123F" BorderBrush="{DynamicResource Accent}" BorderThickness="1" CornerRadius="10" Padding="12,6" Margin="0,0,8,0">
+                                        <StackPanel>
+                                            <TextBlock Text="CPU" FontSize="9" Foreground="{DynamicResource Muted}"/>
+                                            <TextBlock x:Name="MagPillCpu" Text="0%" FontFamily="{StaticResource Mono}" FontSize="12" FontWeight="Bold" Foreground="{DynamicResource Fg}"/>
+                                        </StackPanel>
+                                    </Border>
+                                    <Border Background="#2A123F" BorderBrush="{DynamicResource Accent}" BorderThickness="1" CornerRadius="10" Padding="12,6" Margin="0,0,8,0">
+                                        <StackPanel>
+                                            <TextBlock Text="UPTIME" FontSize="9" Foreground="{DynamicResource Muted}"/>
+                                            <TextBlock x:Name="MagPillUp" Text="0h" FontFamily="{StaticResource Mono}" FontSize="12" FontWeight="Bold" Foreground="{DynamicResource Fg}"/>
+                                        </StackPanel>
+                                    </Border>
+                                    <Border Background="#2A123F" BorderBrush="{DynamicResource Accent}" BorderThickness="1" CornerRadius="10" Padding="12,6">
+                                        <StackPanel>
+                                            <TextBlock Text="RAM" FontSize="9" Foreground="{DynamicResource Muted}"/>
+                                            <TextBlock x:Name="MagPillRam" Text="0%" FontFamily="{StaticResource Mono}" FontSize="12" FontWeight="Bold" Foreground="{DynamicResource Fg}"/>
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
+                            </Grid>
+
+                            <!-- Linha 1: 4 Anéis + Card Lateral Status -->
+                            <Grid Margin="0,0,0,12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="10"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="10"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="10"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="10"/>
+                                    <ColumnDefinition Width="1.25*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Card 1: Free RAM -->
+                                <Border Grid.Column="0" Style="{StaticResource CardBorder}" Padding="14,12">
+                                    <StackPanel>
+                                        <TextBlock Text="RAM LIVRE" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource Muted}"/>
+                                        <Grid Width="72" Height="72" Margin="0,8,0,6">
+                                            <Canvas x:Name="MagFreeRamCanvas" Width="72" Height="72"/>
+                                            <TextBlock x:Name="MagFreeRamPct" Text="—%" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource Fg}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Grid>
+                                        <TextBlock x:Name="MagFreeRamSub" Text="— GB livres" FontSize="10.5" Foreground="{DynamicResource Muted}" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- Card 2: Uptime -->
+                                <Border Grid.Column="2" Style="{StaticResource CardBorder}" Padding="14,12">
+                                    <StackPanel>
+                                        <TextBlock Text="UPTIME" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource Muted}"/>
+                                        <Grid Width="72" Height="72" Margin="0,8,0,6">
+                                            <Canvas x:Name="MagUptimeCanvas" Width="72" Height="72"/>
+                                            <TextBlock x:Name="MagUptimeVal" Text="0h" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource Fg}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Grid>
+                                        <TextBlock x:Name="MagUptimeSub" Text="sessão ativa" FontSize="10.5" Foreground="{DynamicResource Muted}" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- Card 3: Memory Used -->
+                                <Border Grid.Column="4" Style="{StaticResource CardBorder}" Padding="14,12">
+                                    <StackPanel>
+                                        <TextBlock Text="MEMÓRIA" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource Muted}"/>
+                                        <Grid Width="72" Height="72" Margin="0,8,0,6">
+                                            <Canvas x:Name="MagMemCanvas" Width="72" Height="72"/>
+                                            <TextBlock x:Name="MagMemPct" Text="—%" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource Fg}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Grid>
+                                        <TextBlock x:Name="MagMemSub" Text="em uso" FontSize="10.5" Foreground="{DynamicResource Muted}" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- Card 4: Storage -->
+                                <Border Grid.Column="6" Style="{StaticResource CardBorder}" Padding="14,12">
+                                    <StackPanel>
+                                        <TextBlock Text="DISCO C:" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource Muted}"/>
+                                        <Grid Width="72" Height="72" Margin="0,8,0,6">
+                                            <Canvas x:Name="MagDiskCanvas" Width="72" Height="72"/>
+                                            <TextBlock x:Name="MagDiskPct" Text="—%" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource Fg}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Grid>
+                                        <TextBlock x:Name="MagDiskSub" Text="ocupado" FontSize="10.5" Foreground="{DynamicResource Muted}" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- Card 5: Suite Info -->
+                                <Border Grid.Column="8" Style="{StaticResource CardBorder}" Padding="16,14">
+                                    <DockPanel>
+                                        <Button DockPanel.Dock="Bottom" Style="{StaticResource PrimaryButton}" Content="OTIMIZAR AGORA" Padding="12,7" FontSize="11.5" Margin="0,10,0,0" Click="DashOptimize_Click"/>
+                                        <StackPanel>
+                                            <TextBlock Text="Status da Suíte" FontSize="13.5" FontWeight="SemiBold" Foreground="{DynamicResource Fg}" Margin="0,0,0,8"/>
+                                            <Grid Margin="0,2">
+                                                <TextBlock Text="Versão" FontSize="11" Foreground="{DynamicResource Muted}"/>
+                                                <TextBlock Text="v2.0" FontFamily="{StaticResource Mono}" FontSize="11" Foreground="{DynamicResource Accent}" HorizontalAlignment="Right"/>
+                                            </Grid>
+                                            <Grid Margin="0,2">
+                                                <TextBlock Text="Telemetria" FontSize="11" Foreground="{DynamicResource Muted}"/>
+                                                <TextBlock Text="Ativa" FontSize="11" FontWeight="SemiBold" Foreground="#10D68E" HorizontalAlignment="Right"/>
+                                            </Grid>
+                                            <Grid Margin="0,2">
+                                                <TextBlock Text="Benchmark" FontSize="11" Foreground="{DynamicResource Muted}"/>
+                                                <TextBlock x:Name="MagBenchTxt" Text="Pronto" FontSize="11" Foreground="{DynamicResource Fg}" HorizontalAlignment="Right"/>
+                                            </Grid>
+                                        </StackPanel>
+                                    </DockPanel>
+                                </Border>
+                            </Grid>
+
+                            <!-- Linha 2: CPU Usage Graph + System Details -->
+                            <Grid Margin="0,0,0,12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1.1*"/>
+                                    <ColumnDefinition Width="12"/>
+                                    <ColumnDefinition Width="1.1*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Border Grid.Column="0" Style="{StaticResource CardBorder}" Padding="18,14">
+                                    <DockPanel>
+                                        <Grid DockPanel.Dock="Bottom" Margin="0,8,0,0">
+                                            <StackPanel>
+                                                <TextBlock x:Name="MagCpuLoadBig" Text="0%" FontFamily="{StaticResource Mono}" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource Accent}"/>
+                                                <TextBlock Text="USO ATUAL DA CPU" FontSize="9.5" Foreground="{DynamicResource Muted}"/>
+                                            </StackPanel>
+                                            <StackPanel HorizontalAlignment="Right">
+                                                <TextBlock x:Name="MagCpuTempSmall" Text="— °C" FontFamily="{StaticResource Mono}" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource Fg}" HorizontalAlignment="Right"/>
+                                                <TextBlock Text="TEMPERATURA" FontSize="9.5" Foreground="{DynamicResource Muted}" HorizontalAlignment="Right"/>
+                                            </StackPanel>
+                                        </Grid>
+                                        <TextBlock DockPanel.Dock="Top" Text="Uso da CPU em Tempo Real" FontSize="14" FontWeight="SemiBold" Foreground="{DynamicResource Fg}" Margin="0,0,0,8"/>
+                                        <Canvas x:Name="MagCpuSparkCanvas" Height="95" ClipToBounds="True" SizeChanged="DashChart_SizeChanged"/>
+                                    </DockPanel>
+                                </Border>
+
+                                <Border Grid.Column="2" Style="{StaticResource CardBorder}" Padding="18,14">
+                                    <StackPanel>
+                                        <TextBlock Text="Detalhes do Sistema" FontSize="14" FontWeight="SemiBold" Foreground="{DynamicResource Fg}" Margin="0,0,0,12"/>
+                                        <Border BorderBrush="{DynamicResource Line}" BorderThickness="0,0,0,1" Padding="0,6">
+                                            <Grid>
+                                                <TextBlock Text="Máquina" FontSize="12" Foreground="{DynamicResource Muted}"/>
+                                                <TextBlock x:Name="MagSysHost" Text="PC" FontSize="12" Foreground="{DynamicResource Fg}" HorizontalAlignment="Right"/>
+                                            </Grid>
+                                        </Border>
+                                        <Border BorderBrush="{DynamicResource Line}" BorderThickness="0,0,0,1" Padding="0,6">
+                                            <Grid>
+                                                <TextBlock Text="Processador" FontSize="12" Foreground="{DynamicResource Muted}"/>
+                                                <TextBlock x:Name="MagSysCpu" Text="CPU" FontSize="12" Foreground="{DynamicResource Fg}" HorizontalAlignment="Right"/>
+                                            </Grid>
+                                        </Border>
+                                        <Border BorderBrush="{DynamicResource Line}" BorderThickness="0,0,0,1" Padding="0,6">
+                                            <Grid>
+                                                <TextBlock Text="Placa de Vídeo" FontSize="12" Foreground="{DynamicResource Muted}"/>
+                                                <TextBlock x:Name="MagSysGpu" Text="GPU" FontSize="12" Foreground="{DynamicResource Fg}" HorizontalAlignment="Right"/>
+                                            </Grid>
+                                        </Border>
+                                        <Grid Margin="0,10,0,0">
+                                            <TextBlock Text="Silenciar Áudio Master" FontSize="12" Foreground="{DynamicResource Muted}" VerticalAlignment="Center"/>
+                                            <CheckBox x:Name="MagChkMute" HorizontalAlignment="Right" Click="BtnMasterMute_Click"/>
+                                        </Grid>
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
+
+                            <!-- Linha 3: 3 Cards de Perfis & Ferramentas Gamer -->
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="12"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="12"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Border Grid.Column="0" Style="{StaticResource CardBorder}" Padding="18,16">
+                                    <DockPanel>
+                                        <Button DockPanel.Dock="Bottom" Style="{StaticResource PrimaryButton}" Content="CONFIGURAR JOGOS" Margin="0,14,0,0" Padding="12,8" FontSize="12" Tag="PageLauncher" Click="DashGo_Click"/>
+                                        <StackPanel>
+                                            <TextBlock Text="Biblioteca de Jogos" FontSize="15.5" FontWeight="SemiBold" Foreground="{DynamicResource Fg}"/>
+                                            <TextBlock Text="Perfis individuais, prioridade e modo janela sem bordas" FontSize="11.5" Foreground="{DynamicResource Muted}" TextWrapping="Wrap" Margin="0,4,0,0"/>
+                                        </StackPanel>
+                                    </DockPanel>
+                                </Border>
+
+                                <Border Grid.Column="2" Style="{StaticResource CardBorder}" Padding="18,16">
+                                    <DockPanel>
+                                        <Button DockPanel.Dock="Bottom" Style="{StaticResource PrimaryButton}" Content="VER FPS ESTIMADO" Margin="0,14,0,0" Padding="12,8" FontSize="12" Tag="PageGames" Click="DashGo_Click"/>
+                                        <StackPanel>
+                                            <TextBlock Text="Calculadora de FPS" FontSize="15.5" FontWeight="SemiBold" Foreground="{DynamicResource Fg}"/>
+                                            <TextBlock Text="Estimativa de quadros e detecção de gargalo CPU × GPU" FontSize="11.5" Foreground="{DynamicResource Muted}" TextWrapping="Wrap" Margin="0,4,0,0"/>
+                                        </StackPanel>
+                                    </DockPanel>
+                                </Border>
+
+                                <Border Grid.Column="4" Style="{StaticResource CardBorder}" Padding="18,16">
+                                    <DockPanel>
+                                        <Button DockPanel.Dock="Bottom" Style="{StaticResource PrimaryButton}" Content="ABRIR OVERCLOCK" Margin="0,14,0,0" Padding="12,8" FontSize="12" Tag="PageOc" Click="DashGo_Click"/>
+                                        <StackPanel>
+                                            <TextBlock Text="Overclock Seguro" FontSize="15.5" FontWeight="SemiBold" Foreground="{DynamicResource Fg}"/>
+                                            <TextBlock Text="Ajuste de clock e memória com rollback automático de segurança" FontSize="11.5" Foreground="{DynamicResource Muted}" TextWrapping="Wrap" Margin="0,4,0,0"/>
+                                        </StackPanel>
+                                    </DockPanel>
+                                </Border>
+                            </Grid>
+                        </StackPanel>
+
                         <!-- ===== LAYOUT CLÁSSICO / AFTERBURNER DECK (Outras Skins) ===== -->
                         <StackPanel x:Name="DashClassicLayout">
 
