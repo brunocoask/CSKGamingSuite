@@ -31,6 +31,7 @@ public sealed record SkinDefinition(
     bool UseTrafficLights,
     bool DockedSidebar,
     bool ShowAfterburnerDeck,
+    bool ShowBentoNoirDeck,
     string TextureType,
     string BadgeText,
     double CardRadius,
@@ -56,6 +57,31 @@ public static class ThemeManager
     public static IReadOnlyList<SkinDefinition> Skins { get; } = new SkinDefinition[]
     {
         new(
+            Id: "obsidian-bento",
+            Name: "Obsidian Bento",
+            Description: "Bento Grid escuro minimalista com esmeralda, ciano e anéis de precisão",
+            SupportsLightDark: false,
+            UseTrafficLights: false,
+            DockedSidebar: true,
+            ShowAfterburnerDeck: false,
+            ShowBentoNoirDeck: true,
+            TextureType: "obsidian",
+            BadgeText: "NOIR BENTO",
+            CardRadius: 16,
+            ButtonRadius: 16,
+            SidebarRadius: 0,
+            NavRadius: 10,
+            ChipRadius: 14,
+            SwatchPrimary: "#10D68E",
+            SwatchBg: "#0A0B0D",
+            Dark: new(
+                Bg: "#0A0B0D", Panel: "#0E1013", Card: "#131519", Hover: "#1B1F24",
+                Line: "#1F242B", LineStrong: "#10D68E", Fg: "#F3F5F7", Muted: "#8A94A0",
+                Faint: "#525B66", Ink: "#0A0B0D", Accent: "#10D68E", AccentInk: "#06140E",
+                AccentSecondary: "#4CC9F0", Gold: "#10D68E", GoldSoft: "#4CC9F0",
+                ThumbBrush: "#232830", ThumbHover: "#10D68E", ThumbDrag: "#4CC9F0")
+        ),
+        new(
             Id: "clean-glass",
             Name: "Clean Glass",
             Description: "Minimalista com cantos suaves e painel flutuante",
@@ -63,6 +89,7 @@ public static class ThemeManager
             UseTrafficLights: true,
             DockedSidebar: false,
             ShowAfterburnerDeck: false,
+            ShowBentoNoirDeck: false,
             TextureType: "solid",
             BadgeText: "",
             CardRadius: 14,
@@ -93,6 +120,7 @@ public static class ThemeManager
             UseTrafficLights: false,
             DockedSidebar: true,
             ShowAfterburnerDeck: false,
+            ShowBentoNoirDeck: false,
             TextureType: "gradient",
             BadgeText: "FLUENT",
             CardRadius: 8,
@@ -123,6 +151,7 @@ public static class ThemeManager
             UseTrafficLights: false,
             DockedSidebar: true,
             ShowAfterburnerDeck: true,
+            ShowBentoNoirDeck: false,
             TextureType: "grid",
             BadgeText: "TELEMETRY HUD",
             CardRadius: 3,
@@ -147,6 +176,7 @@ public static class ThemeManager
             UseTrafficLights: false,
             DockedSidebar: false,
             ShowAfterburnerDeck: true,
+            ShowBentoNoirDeck: false,
             TextureType: "scanlines",
             BadgeText: "CYBER DECK",
             CardRadius: 2,
@@ -171,6 +201,7 @@ public static class ThemeManager
             UseTrafficLights: false,
             DockedSidebar: false,
             ShowAfterburnerDeck: true,
+            ShowBentoNoirDeck: false,
             TextureType: "carbon",
             BadgeText: "STEALTH MATRIX",
             CardRadius: 6,
@@ -195,6 +226,7 @@ public static class ThemeManager
             UseTrafficLights: false,
             DockedSidebar: true,
             ShowAfterburnerDeck: true,
+            ShowBentoNoirDeck: false,
             TextureType: "diagonal",
             BadgeText: "OVERDRIVE",
             CardRadius: 4,
@@ -219,6 +251,7 @@ public static class ThemeManager
             UseTrafficLights: false,
             DockedSidebar: false,
             ShowAfterburnerDeck: true,
+            ShowBentoNoirDeck: false,
             TextureType: "gradient",
             BadgeText: "OC LAB",
             CardRadius: 10,
@@ -298,6 +331,19 @@ public static class ThemeManager
 
         switch (skin.TextureType)
         {
+            case "obsidian":
+            {
+                var b = new LinearGradientBrush
+                {
+                    StartPoint = new Point(0, 0),
+                    EndPoint = new Point(1, 1)
+                };
+                b.GradientStops.Add(new GradientStop(Color.FromRgb(10, 12, 14), 0.0));
+                b.GradientStops.Add(new GradientStop(Color.FromRgb(12, 18, 17), 0.5));
+                b.GradientStops.Add(new GradientStop(Color.FromRgb(11, 11, 16), 1.0));
+                b.Freeze();
+                return b;
+            }
             case "gradient":
             {
                 var c2 = IsLight
@@ -383,6 +429,14 @@ public static class ThemeManager
 
     private static Brush BuildCardBorderBrush(SkinDefinition skin, SkinPalette p)
     {
+        if (skin.ShowBentoNoirDeck)
+        {
+            var top = Color.FromRgb(46, 54, 64);
+            var bot = Color.FromRgb(23, 26, 32);
+            var b = new LinearGradientBrush(top, bot, new Point(0, 0), new Point(1, 1));
+            b.Freeze();
+            return b;
+        }
         if (skin.ShowAfterburnerDeck)
         {
             var line = (Color)ColorConverter.ConvertFromString(p.Line);

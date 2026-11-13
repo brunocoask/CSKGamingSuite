@@ -91,9 +91,14 @@ public partial class MainWindow
     // ---------------- atualização ----------------
 
     private void DashOption_Checked(object sender, RoutedEventArgs e) { if (DashChart != null) DrawDashChart(); }
-    private void DashChart_SizeChanged(object sender, SizeChangedEventArgs e) => DrawDashChart();
+    private void DashChart_SizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        if (DashBentoLayout != null && DashBentoLayout.Visibility == Visibility.Visible) DrawBentoSpark();
+        else DrawDashChart();
+    }
     private void DashBench_Click(object sender, RoutedEventArgs e) => NavBench.IsChecked = true;
     private void DashOptimize_Click(object sender, RoutedEventArgs e) => NavOptimize.IsChecked = true;
+    private void BentoAllSensors_Click(object sender, RoutedEventArgs e) => NavSensors.IsChecked = true;
 
     private void DashGo_Click(object sender, RoutedEventArgs e)
     {
@@ -104,6 +109,11 @@ public partial class MainWindow
 
     private void UpdateDashboard(bool full = true)
     {
+        if (DashBentoLayout != null && DashBentoLayout.Visibility == Visibility.Visible)
+        {
+            UpdateBentoDashboard();
+            return;
+        }
         DrawDashChart();
         UpdateAfterburnerGauges();
         UpdateDashComponents();
@@ -114,6 +124,126 @@ public partial class MainWindow
             ShowEvents();
         }
         if (full || (DateTime.Now - _healthAt).TotalSeconds > 60) UpdateDashHealth();
+    }
+
+    private void UpdateBentoDashboard()
+    {
+        BentoPcLabel.Text = Environment.MachineName;
+        BentoUserTitle.Text = Environment.UserName;
+
+        float? cpuT = _monitor.CpuTemperature;
+        float? cpuL = _monitor.CpuLoad;
+        float? cpuW = _monitor.CpuPower;
+        float? gpuT = MainGpuTemp();
+        float? gpuL = MainGpuLoad();
+        float? gpuW = MainGpuPower();
+
+        // CPU
+        BentoCpuModel.Text = string.IsNullOrWhiteSpace(_cpuName) ? "Processador" : GameCatalog.ShortCpuName(_cpuName);
+        BentoCpuTempTxt.Text = cpuT is float ct ? $"{ct:0}°" : "—°";
+        BentoCpuUtilTxt.Text = cpuL is float cl ? $"{cl:0}%" : "—";
+        BentoCpuBar.Width = cpuL is float cl2 ? Math.Clamp(cl2 / 100.0, 0, 1) * 140 : 0;
+        var ciano = new SolidColorBrush(Color.FromRgb(76, 201, 240));
+        ciano.Freeze();
+        DrawBentoRing(BentoCpuRingCanvas, cpuT is float ct2 ? Math.Clamp((ct2 - 20) / 80.0, 0.05, 1) : 0.15, ciano);
+
+        bool tempHot = (cpuT ?? 0) >= 85 || (gpuT ?? 0) >= 85;
+        var okCol = new SolidColorBrush(Color.FromRgb(16, 214, 142));
+        var warnCol = new SolidColorBrush(Color.FromRgb(245, 158, 11));
+        okCol.Freeze(); warnCol.Freeze();
+        BentoDotTemp.Fill = tempHot ? warnCol : okCol;
+        BentoStatTemp.Text = tempHot ? "Elevada" : "Ideal";
+        BentoCpuDot.Fill = (cpuT ?? 0) >= 85 ? warnCol : okCol;
+        BentoCpuStatus.Text = (cpuT ?? 0) >= 85 ? "Quente" : "Ideal";
+
+        // GPU
+        if (_gpus.Count > 0)
+        {
+            BentoGpuModel.Text = GameCatalog.ShortGpuName(_gpus[0].Name);
+            BentoStatGpu.Text = GameCatalog.ShortGpuName(_gpus[0].Name);
+        }
+        BentoGpuTempTxt.Text = gpuT is float gt ? $"{gt:0}°" : "—°";
+        BentoGpuUtilTxt.Text = gpuL is float gl ? $"{gl:0}%" : "—";
+        BentoGpuBar.Width = gpuL is float gl2 ? Math.Clamp(gl2 / 100.0, 0, 1) * 140 : 0;
+        DrawBentoRing(BentoGpuRingCanvas, gpuT is float gt2 ? Math.Clamp((gt2 - 20) / 80.0, 0.05, 1) : 0.15, ciano);
+        BentoGpuDot.Fill = (gpuT ?? 0) >= 85 ? warnCol : okCol;
+        BentoGpuStatus.Text = (gpuT ?? 0) >= 85 ? "Quente" : "Ideal";
+
+        // RAM
+        var (total, avail) = Optimizer.MemoryStatus();
+        if (total > 0)
+        {
+            double frac = (double)(total - avail) / total;
+            BentoRamSub.Text = $"{total / 1073741824.0:0} GB RAM";
+            BentoRamUtilTxt.Text = $"{frac:P0}";
+            BentoRamBar.Width = Math.Clamp(frac, 0, 1) * 130;
+            BentoStatRam.Text = $"{(total - avail) / 1073741824.0:0.0} / {total / 1073741824.0:0} GB";
+        }
+
+        // Disco
+        if (_drives.FirstOrDefault(d => d.Letter.StartsWith("C", StringComparison.OrdinalIgnoreCase)) is { } c0)
+        {
+            double frac = c0.Total > 0 ? (double)(c0.Total - c0.Free) / c0.Total : 0;
+            BentoDiskSub.Text = c0.Disk.Length > 0 ? c0.Disk : c0.Kind;
+            BentoDiskUtilTxt.Text = $"{frac:P0}";
+            BentoDiskBar.Width = Math.Clamp(frac, 0, 1) * 130;
+            BentoStatDisk.Text = $"{DriveCard.Fmt(c0.Free)} livres";
+        }
+
+        // Benchmark & Controles
+        var runs = _settings.BenchRuns.Where(r => r.Multi != null).ToList();
+        BentoBenchStat.Text = runs.Count > 0 ? $"Última nota: {runs[0].Multi:N0} pts" : "Pronto para testar";
+        BentoChkSidebar.IsChecked = _settings.SidebarExpanded;
+        BentoChkMute.IsChecked = _audio.IsMasterMuted();
+
+        // Telemetria ao Vivo (Sparkline Violeta)
+        BentoLiveCpuW.Text = cpuW is float cw ? $"CPU {cw:0}W" : "CPU —";
+        BentoLiveGpuW.Text = gpuW is float gw ? $"GPU {gw:0}W" : "GPU —";
+        DrawBentoSpark();
+    }
+
+    private void DrawBentoRing(Canvas canvas, double fraction, Brush stroke)
+    {
+        canvas.Children.Clear();
+        double cx = canvas.Width / 2, cy = canvas.Height / 2, r = 34;
+        var track = new SolidColorBrush(Color.FromArgb(0x28, 255, 255, 255));
+        track.Freeze();
+        canvas.Children.Add(BuildArcPath(cx, cy, r, -90, 359.9, track, 5));
+        canvas.Children.Add(BuildArcPath(cx, cy, r, -90, 359.9 * Math.Clamp(fraction, 0.02, 0.99), stroke, 5));
+    }
+
+    private void DrawBentoSpark()
+    {
+        BentoSparkCanvas.Children.Clear();
+        double w = BentoSparkCanvas.ActualWidth, h = BentoSparkCanvas.ActualHeight;
+        if (w < 20 || h < 20) return;
+
+        var pts = _dash.TakeLast(60).Select(s => (double)(s.CpuL ?? s.GpuL ?? 10)).ToList();
+        if (pts.Count < 2) pts = new List<double> { 12, 18, 15, 24, 21, 28, 22 };
+
+        var lineCol = Color.FromRgb(167, 139, 250);
+        var polyLine = new Polyline
+        {
+            Stroke = new SolidColorBrush(lineCol),
+            StrokeThickness = 2,
+            StrokeLineJoin = PenLineJoin.Round
+        };
+        var area = new Polygon
+        {
+            Fill = new LinearGradientBrush(Color.FromArgb(0x66, 139, 92, 246), Color.FromArgb(0x05, 139, 92, 246), new Point(0, 0), new Point(0, 1))
+        };
+
+        for (int i = 0; i < pts.Count; i++)
+        {
+            double x = w * i / Math.Max(1, pts.Count - 1);
+            double y = h - 4 - Math.Clamp(pts[i] / 100.0, 0.05, 0.95) * (h - 10);
+            polyLine.Points.Add(new Point(x, y));
+            area.Points.Add(new Point(x, y));
+        }
+        area.Points.Add(new Point(w, h));
+        area.Points.Add(new Point(0, h));
+        BentoSparkCanvas.Children.Add(area);
+        BentoSparkCanvas.Children.Add(polyLine);
     }
 
     private void UpdateAfterburnerGauges()

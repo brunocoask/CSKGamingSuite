@@ -135,6 +135,8 @@ public partial class MainWindow
         SkinBadgeText.Text = skin.BadgeText;
 
         DashAfterburnerDeck.Visibility = skin.ShowAfterburnerDeck ? Visibility.Visible : Visibility.Collapsed;
+        DashBentoLayout.Visibility = skin.ShowBentoNoirDeck ? Visibility.Visible : Visibility.Collapsed;
+        DashClassicLayout.Visibility = skin.ShowBentoNoirDeck ? Visibility.Collapsed : Visibility.Visible;
 
         TitleLogo.Source = new System.Windows.Media.Imaging.BitmapImage(
             new Uri(light ? "pack://application:,,,/Assets/logo-dark.png" : "pack://application:,,,/Assets/logo.png"));

@@ -505,7 +505,331 @@
 
                 <!-- ===== VISÃO GERAL (painel) ===== -->
                 <ScrollViewer x:Name="PageDash" VerticalScrollBarVisibility="Auto">
-                    <StackPanel Margin="18,4,20,10">
+                    <Grid Margin="18,6,20,14">
+                        <!-- ===== LAYOUT BENTO NOIR (Skin Obsidian Bento) ===== -->
+                        <StackPanel x:Name="DashBentoLayout" Visibility="Collapsed">
+                            <!-- Linha Superior Bento -->
+                            <Grid Margin="0,0,0,12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1.05*"/>
+                                    <ColumnDefinition Width="12"/>
+                                    <ColumnDefinition Width="2.15*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Card Grande Esquerdo: Welcome + Status Geral + Arte Sutil -->
+                                <Border Grid.Column="0" Style="{StaticResource CardBorder}" Padding="22,20">
+                                    <Grid>
+                                        <!-- Arte geométrica sutil no fundo do card -->
+                                        <Canvas Opacity="0.16" IsHitTestVisible="False" HorizontalAlignment="Right" VerticalAlignment="Center" Width="170" Height="170" Margin="0,0,-10,0">
+                                            <Rectangle Width="110" Height="110" Canvas.Left="30" Canvas.Top="30" Stroke="#8B5CF6" StrokeThickness="1" RadiusX="8" RadiusY="8">
+                                                <Rectangle.RenderTransform><RotateTransform Angle="15" CenterX="55" CenterY="55"/></Rectangle.RenderTransform>
+                                            </Rectangle>
+                                            <Rectangle Width="110" Height="110" Canvas.Left="30" Canvas.Top="30" Stroke="#10D68E" StrokeThickness="1" RadiusX="8" RadiusY="8">
+                                                <Rectangle.RenderTransform><RotateTransform Angle="32" CenterX="55" CenterY="55"/></Rectangle.RenderTransform>
+                                            </Rectangle>
+                                            <Rectangle Width="110" Height="110" Canvas.Left="30" Canvas.Top="30" Stroke="#4CC9F0" StrokeThickness="0.8" RadiusX="8" RadiusY="8">
+                                                <Rectangle.RenderTransform><RotateTransform Angle="48" CenterX="55" CenterY="55"/></Rectangle.RenderTransform>
+                                            </Rectangle>
+                                        </Canvas>
+
+                                        <DockPanel>
+                                            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
+                                                <Button Style="{StaticResource OutlineButton}" BorderBrush="{DynamicResource Line}" Padding="14,7" FontSize="12"
+                                                        Tag="PageSystem" Click="DashGo_Click">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="Meu PC" VerticalAlignment="Center"/>
+                                                        <TextBlock Text=" &#xE76C;" FontFamily="{StaticResource Icons}" FontSize="10" VerticalAlignment="Center" Margin="6,1,0,0"/>
+                                                    </StackPanel>
+                                                </Button>
+                                            </StackPanel>
+
+                                            <StackPanel>
+                                                <TextBlock x:Name="BentoPcLabel" Text="WORKSTATION" Foreground="{DynamicResource Muted}" FontSize="11.5"/>
+                                                <TextBlock x:Name="BentoUserTitle" Text="CSK Suite" FontSize="28" FontWeight="SemiBold" Foreground="{DynamicResource Fg}" Margin="0,2,0,22"/>
+
+                                                <!-- 4 Linhas de Saúde -->
+                                                <StackPanel Margin="0,0,0,12">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <Ellipse x:Name="BentoDotTemp" Width="8" Height="8" Fill="#10D68E" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                                        <TextBlock Text="Temperaturas" FontSize="13.5" FontWeight="SemiBold" Foreground="{DynamicResource Fg}"/>
+                                                    </StackPanel>
+                                                    <TextBlock x:Name="BentoStatTemp" Text="Ideal" FontSize="11.5" Foreground="{DynamicResource Muted}" Margin="18,2,0,0"/>
+                                                </StackPanel>
+
+                                                <StackPanel Margin="0,0,0,12">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <Ellipse x:Name="BentoDotRam" Width="8" Height="8" Fill="#10D68E" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                                        <TextBlock Text="Memória RAM" FontSize="13.5" FontWeight="SemiBold" Foreground="{DynamicResource Fg}"/>
+                                                    </StackPanel>
+                                                    <TextBlock x:Name="BentoStatRam" Text="Estável" FontSize="11.5" Foreground="{DynamicResource Muted}" Margin="18,2,0,0"/>
+                                                </StackPanel>
+
+                                                <StackPanel Margin="0,0,0,12">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <Ellipse x:Name="BentoDotGpu" Width="8" Height="8" Fill="#10D68E" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                                        <TextBlock Text="Placa de Vídeo" FontSize="13.5" FontWeight="SemiBold" Foreground="{DynamicResource Fg}"/>
+                                                    </StackPanel>
+                                                    <TextBlock x:Name="BentoStatGpu" Text="Detectada" FontSize="11.5" Foreground="{DynamicResource Muted}" Margin="18,2,0,0"/>
+                                                </StackPanel>
+
+                                                <StackPanel>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <Ellipse x:Name="BentoDotDisk" Width="8" Height="8" Fill="#10D68E" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                                        <TextBlock Text="Armazenamento" FontSize="13.5" FontWeight="SemiBold" Foreground="{DynamicResource Fg}"/>
+                                                    </StackPanel>
+                                                    <TextBlock x:Name="BentoStatDisk" Text="Saudável" FontSize="11.5" Foreground="{DynamicResource Muted}" Margin="18,2,0,0"/>
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </DockPanel>
+                                    </Grid>
+                                </Border>
+
+                                <!-- Grid Direito Superior (Processor + RAM + Storage / Video Card + Network/Telemetry) -->
+                                <Grid Grid.Column="2">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="12"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <!-- Sub-linha 1: Processor | RAM | Storage -->
+                                    <Grid Grid.Row="0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1.55*"/>
+                                            <ColumnDefinition Width="12"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="12"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <!-- Processor -->
+                                        <Border Grid.Column="0" Style="{StaticResource CardBorder}" Padding="18,16" Cursor="Hand" Tag="PageSensors" MouseLeftButtonUp="DashGo_Click">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <DockPanel>
+                                                    <StackPanel DockPanel.Dock="Bottom" Margin="0,16,12,0">
+                                                        <Grid Margin="0,0,0,6">
+                                                            <TextBlock Text="Utilização" FontSize="11" Foreground="{DynamicResource Muted}"/>
+                                                            <TextBlock x:Name="BentoCpuUtilTxt" Text="0%" FontSize="11" FontFamily="{StaticResource Mono}" Foreground="{DynamicResource Fg}" HorizontalAlignment="Right"/>
+                                                        </Grid>
+                                                        <Border Height="3.5" Background="{DynamicResource Hover}" CornerRadius="2" ClipToBounds="True">
+                                                            <Rectangle x:Name="BentoCpuBar" Fill="{DynamicResource Fg}" HorizontalAlignment="Left" Width="40" RadiusX="2" RadiusY="2"/>
+                                                        </Border>
+                                                    </StackPanel>
+                                                    <StackPanel>
+                                                        <TextBlock Text="Processador" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource Fg}"/>
+                                                        <TextBlock x:Name="BentoCpuModel" Text="CPU" FontSize="11" Foreground="{DynamicResource Muted}" Margin="0,2,0,10" TextTrimming="CharacterEllipsis"/>
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <Ellipse x:Name="BentoCpuDot" Width="7" Height="7" Fill="#10D68E" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                                            <TextBlock x:Name="BentoCpuStatus" Text="Ideal" FontSize="12" Foreground="{DynamicResource Fg}"/>
+                                                        </StackPanel>
+                                                    </StackPanel>
+                                                </DockPanel>
+                                                <!-- Anel Ciano de Temperatura -->
+                                                <Grid Grid.Column="1" Width="82" Height="82" VerticalAlignment="Center" Margin="6,0,0,0">
+                                                    <Canvas x:Name="BentoCpuRingCanvas" Width="82" Height="82"/>
+                                                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                                                        <TextBlock x:Name="BentoCpuTempTxt" Text="—°" FontSize="20" FontWeight="SemiBold" Foreground="{DynamicResource Fg}" HorizontalAlignment="Center"/>
+                                                        <TextBlock Text="Celsius" FontSize="9.5" Foreground="{DynamicResource Muted}" HorizontalAlignment="Center"/>
+                                                    </StackPanel>
+                                                </Grid>
+                                            </Grid>
+                                        </Border>
+
+                                        <!-- RAM -->
+                                        <Border Grid.Column="2" Style="{StaticResource CardBorder}" Padding="18,16" Cursor="Hand" Tag="PageSystem" MouseLeftButtonUp="DashGo_Click">
+                                            <DockPanel>
+                                                <StackPanel DockPanel.Dock="Bottom" Margin="0,18,0,0">
+                                                    <Grid Margin="0,0,0,6">
+                                                        <TextBlock Text="Utilização" FontSize="11" Foreground="{DynamicResource Muted}"/>
+                                                        <TextBlock x:Name="BentoRamUtilTxt" Text="0%" FontSize="11" FontFamily="{StaticResource Mono}" Foreground="{DynamicResource Fg}" HorizontalAlignment="Right"/>
+                                                    </Grid>
+                                                    <Border Height="3.5" Background="{DynamicResource Hover}" CornerRadius="2" ClipToBounds="True">
+                                                        <Rectangle x:Name="BentoRamBar" Fill="{DynamicResource Fg}" HorizontalAlignment="Left" Width="40" RadiusX="2" RadiusY="2"/>
+                                                    </Border>
+                                                </StackPanel>
+                                                <StackPanel>
+                                                    <TextBlock Text="RAM" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource Fg}"/>
+                                                    <TextBlock x:Name="BentoRamSub" Text="Memória" FontSize="11" Foreground="{DynamicResource Muted}" Margin="0,2,0,10" TextTrimming="CharacterEllipsis"/>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <Ellipse Width="7" Height="7" Fill="#10D68E" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                                        <TextBlock x:Name="BentoRamStatus" Text="Ideal" FontSize="12" Foreground="{DynamicResource Fg}"/>
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </DockPanel>
+                                        </Border>
+
+                                        <!-- Storage -->
+                                        <Border Grid.Column="4" Style="{StaticResource CardBorder}" Padding="18,16" Cursor="Hand" Tag="PageDisks" MouseLeftButtonUp="DashGo_Click">
+                                            <DockPanel>
+                                                <StackPanel DockPanel.Dock="Bottom" Margin="0,18,0,0">
+                                                    <Grid Margin="0,0,0,6">
+                                                        <TextBlock Text="Uso do Disco" FontSize="11" Foreground="{DynamicResource Muted}"/>
+                                                        <TextBlock x:Name="BentoDiskUtilTxt" Text="0%" FontSize="11" FontFamily="{StaticResource Mono}" Foreground="{DynamicResource Fg}" HorizontalAlignment="Right"/>
+                                                    </Grid>
+                                                    <Border Height="3.5" Background="{DynamicResource Hover}" CornerRadius="2" ClipToBounds="True">
+                                                        <Rectangle x:Name="BentoDiskBar" Fill="{DynamicResource Fg}" HorizontalAlignment="Left" Width="40" RadiusX="2" RadiusY="2"/>
+                                                    </Border>
+                                                </StackPanel>
+                                                <StackPanel>
+                                                    <TextBlock Text="Armazenamento" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource Fg}"/>
+                                                    <TextBlock x:Name="BentoDiskSub" Text="NVMe / SSD" FontSize="11" Foreground="{DynamicResource Muted}" Margin="0,2,0,10" TextTrimming="CharacterEllipsis"/>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <Ellipse Width="7" Height="7" Fill="#10D68E" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                                        <TextBlock x:Name="BentoDiskStatus" Text="Ideal" FontSize="12" Foreground="{DynamicResource Fg}"/>
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </DockPanel>
+                                        </Border>
+                                    </Grid>
+
+                                    <!-- Sub-linha 2: Video Card | Live Telemetry Sparkline -->
+                                    <Grid Grid.Row="2">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1.05*"/>
+                                            <ColumnDefinition Width="12"/>
+                                            <ColumnDefinition Width="1.2*"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <!-- Video Card -->
+                                        <Border Grid.Column="0" Style="{StaticResource CardBorder}" Padding="18,16" Cursor="Hand" Tag="PageGpu" MouseLeftButtonUp="DashGo_Click">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <DockPanel>
+                                                    <StackPanel DockPanel.Dock="Bottom" Margin="0,16,12,0">
+                                                        <Grid Margin="0,0,0,6">
+                                                            <TextBlock Text="Utilização" FontSize="11" Foreground="{DynamicResource Muted}"/>
+                                                            <TextBlock x:Name="BentoGpuUtilTxt" Text="0%" FontSize="11" FontFamily="{StaticResource Mono}" Foreground="{DynamicResource Fg}" HorizontalAlignment="Right"/>
+                                                        </Grid>
+                                                        <Border Height="3.5" Background="{DynamicResource Hover}" CornerRadius="2" ClipToBounds="True">
+                                                            <Rectangle x:Name="BentoGpuBar" Fill="{DynamicResource Fg}" HorizontalAlignment="Left" Width="30" RadiusX="2" RadiusY="2"/>
+                                                        </Border>
+                                                    </StackPanel>
+                                                    <StackPanel>
+                                                        <TextBlock Text="Placa de Vídeo" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource Fg}"/>
+                                                        <TextBlock x:Name="BentoGpuModel" Text="GPU" FontSize="11" Foreground="{DynamicResource Muted}" Margin="0,2,0,10" TextTrimming="CharacterEllipsis"/>
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <Ellipse x:Name="BentoGpuDot" Width="7" Height="7" Fill="#10D68E" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                                            <TextBlock x:Name="BentoGpuStatus" Text="Ideal" FontSize="12" Foreground="{DynamicResource Fg}"/>
+                                                        </StackPanel>
+                                                    </StackPanel>
+                                                </DockPanel>
+                                                <!-- Anel Ciano de Temperatura GPU -->
+                                                <Grid Grid.Column="1" Width="82" Height="82" VerticalAlignment="Center" Margin="6,0,0,0">
+                                                    <Canvas x:Name="BentoGpuRingCanvas" Width="82" Height="82"/>
+                                                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                                                        <TextBlock x:Name="BentoGpuTempTxt" Text="—°" FontSize="20" FontWeight="SemiBold" Foreground="{DynamicResource Fg}" HorizontalAlignment="Center"/>
+                                                        <TextBlock Text="Celsius" FontSize="9.5" Foreground="{DynamicResource Muted}" HorizontalAlignment="Center"/>
+                                                    </StackPanel>
+                                                </Grid>
+                                            </Grid>
+                                        </Border>
+
+                                        <!-- Live Telemetry Sparkline (gráfico de área violeta como na referência) -->
+                                        <Border Grid.Column="2" Style="{StaticResource CardBorder}" Padding="18,16">
+                                            <DockPanel>
+                                                <Grid DockPanel.Dock="Top">
+                                                    <StackPanel>
+                                                        <TextBlock Text="Telemetria ao Vivo" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource Fg}"/>
+                                                        <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                                                            <Ellipse Width="7" Height="7" Fill="#10D68E" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                                            <TextBlock Text="Monitoramento Ativo" FontSize="11.5" Foreground="{DynamicResource Muted}"/>
+                                                        </StackPanel>
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
+                                                        <TextBlock x:Name="BentoLiveCpuW" Text="— W" FontFamily="{StaticResource Mono}" FontSize="11.5" Foreground="#4CC9F0" Margin="0,0,10,0"/>
+                                                        <TextBlock x:Name="BentoLiveGpuW" Text="— W" FontFamily="{StaticResource Mono}" FontSize="11.5" Foreground="#A78BFA"/>
+                                                    </StackPanel>
+                                                </Grid>
+                                                <Canvas x:Name="BentoSparkCanvas" Height="82" Margin="0,10,0,0" ClipToBounds="True" SizeChanged="DashChart_SizeChanged"/>
+                                            </DockPanel>
+                                        </Border>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+
+                            <!-- Linha Inferior Bento: Analyzer | Optimization | Quick Controls -->
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="12"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="12"/>
+                                    <ColumnDefinition Width="1.15*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Card Inferior 1: Performance Analyzer -->
+                                <Border Grid.Column="0" Style="{StaticResource CardBorder}" Padding="20,18">
+                                    <DockPanel>
+                                        <Button DockPanel.Dock="Bottom" Style="{StaticResource OutlineButton}" BorderBrush="{DynamicResource Line}" HorizontalAlignment="Left" Padding="14,7" FontSize="12" Margin="0,16,0,0" Click="DashBench_Click">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="Analisar" VerticalAlignment="Center"/>
+                                                <TextBlock Text=" &#xE76C;" FontFamily="{StaticResource Icons}" FontSize="10" VerticalAlignment="Center" Margin="6,1,0,0"/>
+                                            </StackPanel>
+                                        </Button>
+                                        <StackPanel>
+                                            <TextBlock Text="Performance Analyzer" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource Fg}"/>
+                                            <TextBlock Text="Benchmark gráfico 3D e pontuação" FontSize="11" Foreground="{DynamicResource Muted}" Margin="0,2,0,12"/>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Ellipse Width="7" Height="7" Fill="#10D68E" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                                <TextBlock x:Name="BentoBenchStat" Text="Pronto para testar" FontSize="12" Foreground="{DynamicResource Fg}"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </DockPanel>
+                                </Border>
+
+                                <!-- Card Inferior 2: Optimization -->
+                                <Border Grid.Column="2" Style="{StaticResource CardBorder}" Padding="20,18">
+                                    <DockPanel>
+                                        <Button DockPanel.Dock="Bottom" Style="{StaticResource OutlineButton}" BorderBrush="{DynamicResource Line}" HorizontalAlignment="Left" Padding="14,7" FontSize="12" Margin="0,16,0,0" Click="DashOptimize_Click">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="Otimizar" VerticalAlignment="Center"/>
+                                                <TextBlock Text=" &#xE76C;" FontFamily="{StaticResource Icons}" FontSize="10" VerticalAlignment="Center" Margin="6,1,0,0"/>
+                                            </StackPanel>
+                                        </Button>
+                                        <StackPanel>
+                                            <TextBlock Text="Otimização" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource Fg}"/>
+                                            <TextBlock Text="Latência reduzida e ajustes do Windows" FontSize="11" Foreground="{DynamicResource Muted}" Margin="0,2,0,12"/>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Ellipse Width="7" Height="7" Fill="#10D68E" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                                <TextBlock Text="Ajustes disponíveis" FontSize="12" Foreground="{DynamicResource Fg}"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </DockPanel>
+                                </Border>
+
+                                <!-- Card Inferior 3: Quick Controls (estilo Platform Settings da imagem) -->
+                                <Border Grid.Column="4" Style="{StaticResource CardBorder}" Padding="20,18">
+                                    <StackPanel>
+                                        <TextBlock Text="Controles Rápidos" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource Fg}" Margin="0,0,0,10"/>
+                                        <TextBlock Text="ATALHOS DA SUÍTE" FontSize="9.5" FontWeight="Bold" Foreground="{DynamicResource Faint}" Margin="0,0,0,8"/>
+                                        <Grid Margin="0,4">
+                                            <TextBlock Text="Menu Lateral Expandido" FontSize="12" Foreground="{DynamicResource Muted}" VerticalAlignment="Center"/>
+                                            <CheckBox x:Name="BentoChkSidebar" HorizontalAlignment="Right" Click="BtnToggleSidebar_Click"/>
+                                        </Grid>
+                                        <Grid Margin="0,4">
+                                            <TextBlock Text="Silenciar Áudio Master" FontSize="12" Foreground="{DynamicResource Muted}" VerticalAlignment="Center"/>
+                                            <CheckBox x:Name="BentoChkMute" HorizontalAlignment="Right" Click="BtnMasterMute_Click"/>
+                                        </Grid>
+                                        <Button Style="{StaticResource OutlineButton}" BorderBrush="{DynamicResource Line}" Margin="0,12,0,0" Padding="14,7" FontSize="12" Click="BentoAllSensors_Click">
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                <TextBlock Text="Todos os Sensores" VerticalAlignment="Center"/>
+                                                <TextBlock Text=" &#xE76C;" FontFamily="{StaticResource Icons}" FontSize="10" VerticalAlignment="Center" Margin="6,1,0,0"/>
+                                            </StackPanel>
+                                        </Button>
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
+                        </StackPanel>
+
+                        <!-- ===== LAYOUT CLÁSSICO / AFTERBURNER DECK (Outras Skins) ===== -->
+                        <StackPanel x:Name="DashClassicLayout">
 
                         <!-- Deck de Mostradores estilo painel de hardware (ativo nas skins HUD / Gamer / Overclock) -->
                         <Grid x:Name="DashAfterburnerDeck" Visibility="Collapsed" Margin="0,0,0,10">
@@ -809,7 +1133,8 @@
                                 </DockPanel>
                             </Border>
                         </Grid>
-                    </StackPanel>
+                        </StackPanel>
+                    </Grid>
                 </ScrollViewer>
 
                 <!-- ===== SISTEMA ===== -->
